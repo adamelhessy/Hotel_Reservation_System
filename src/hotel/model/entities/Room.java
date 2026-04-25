@@ -65,13 +65,17 @@ public class Room implements Serializable
         return reviews;
     }
 
+    public void setAmenities(List<Amenity> amenities) {
+        this.amenities = amenities;
+    }
+
     public void addReview (Review review) {
         reviews.add(review);
     }
 
     public double calculateAverageRating() {
         if (reviews.isEmpty()) {
-            return 0.0; // No reviews, average rating is 0
+            return 0.0; 
         }
         double totalRating = 0;
         for (Review review : reviews) {

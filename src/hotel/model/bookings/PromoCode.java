@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class PromoCode implements Serializable {
-    private static final long serialVersionUID = 1L; // Good practice for serialization
+    private static final long serialVersionUID = 1L; 
 
     private String code;
-    private double discountPercentage; // e.g., 0.10 for 10%
+    private double discountPercentage; 
     private LocalDate expiryDate;
     private boolean isActive;
 

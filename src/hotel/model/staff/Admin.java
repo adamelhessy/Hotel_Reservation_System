@@ -18,7 +18,7 @@ public class  Admin extends Staff implements Manageable
 
     public Admin() { }
 
-    public Admin(String userName, String password, UserType typeofuser, Gender theGender, String newpassword, int failedLoginAttempts, AccountStatus accountStatus, LocalDate dateOfbirth, String phoneNumber, String address, int workingHours, List<Invoice> invoicesList, List<RoomType> roomTypeList, List<Amenity> amenityList, List<Room> roomList) {
+    public Admin(String userName, String password, UserType typeofuser, Gender theGender, String newpassword, int failedLoginAttempts, AccountStatus accountStatus, LocalDate dateOfbirth, String phoneNumber, String address, int workingHours) {
         super(userName, password, typeofuser, theGender, newpassword, failedLoginAttempts, accountStatus, dateOfbirth, phoneNumber, address, workingHours);
 
     }
@@ -256,7 +256,7 @@ public class  Admin extends Staff implements Manageable
         {
             if (type.getTypeName().equalsIgnoreCase(roomType))
             {
-                type.setSeasonMultiplier(multiplier); // Fix: Actually update the multiplier
+                type.setSeasonMultiplier(multiplier);// Fix: Actually update the multiplier
                 Database.saveData();
                 return;
             }
@@ -266,6 +266,7 @@ public class  Admin extends Staff implements Manageable
 
     public void generateFinancialReport(int days) throws Exception
     {
+        int cancelationc=0;
         if (days < 0) {
             throw new Exception("Invalid Input: Days cannot be negative.");
         }
@@ -281,12 +282,24 @@ public class  Admin extends Staff implements Manageable
 
         System.out.println("\n--- Financial Report (Last " + days + " Days) ---");
         for (Invoice inv : invoicesList) {
-            if (inv.isPaid() && (inv.getPaymentDate().isAfter(cutoffDate) || inv.getPaymentDate().isEqual(cutoffDate))){
+            Reservation res = inv.getReservation();
+
+            // Fix: Use Check-In Date for cancellations to avoid null paymentDate
+            if (res.getStatus().equals(ReservationStatus.CANCELLED)) {
+                if (res.getCheckinDate().isAfter(cutoffDate) || res.getCheckinDate().isEqual(cutoffDate)) {
+                    cancelationc++;
+                }
+            }
+
+            // Revenue logic stays the same (since paid invoices always have a date)
+            if (inv.isPaid() && (inv.getPaymentDate().isAfter(cutoffDate) || inv.getPaymentDate().isEqual(cutoffDate))) {
                 total += inv.getTotalAmount();
                 System.out.println("ID: " + inv.getInvoiceID() + " | Date: " + inv.getPaymentDate() + " | Amount: $" + inv.getTotalAmount());
             }
         }
+
         System.out.println("TOTAL REVENUE: $" + total);
+        System.out.println("TOTAL RESERVATIONS CANCELED: " + cancelationc);
     }
     public void DisplayRoomType() {
         List<RoomType> roomtype = Database.getRoomTypes();

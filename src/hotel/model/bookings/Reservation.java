@@ -56,6 +56,14 @@ public class Reservation implements Serializable
         return total;
     }
 
+    public void addAmenity (Amenity amenity)
+    {
+        if( amenity != null && !requestedAmenities.contains(amenity))
+        {
+            this.requestedAmenities.add(amenity);
+        }
+    }
+
     public void updatediningpack(DiningPackage diningpackage)
     {
         this.diningpackage = diningpackage;

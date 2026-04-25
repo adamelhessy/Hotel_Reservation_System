@@ -63,8 +63,10 @@ public class RoomType implements Serializable
         return seasonMultiplier;
     }
 
-    public void setSeasonMultiplier(double seasonMultiplier) {
+    public void setSeasonMultiplier(double seasonMultiplier) 
+    {
         this.seasonMultiplier = seasonMultiplier;
+        this.pricePerNight = this.basePrice * seasonMultiplier;     
     }
 
     public RoomView getRoomView() {

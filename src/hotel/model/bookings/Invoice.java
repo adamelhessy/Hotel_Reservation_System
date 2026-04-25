@@ -96,7 +96,7 @@ public class Invoice implements Payable , Serializable
 
     @Override
     public double getTotal() {
-        return totalAmount; // Removed the secondary deduction
+        return totalAmount; 
     }
 
     @Override
@@ -145,9 +145,10 @@ public class Invoice implements Payable , Serializable
             }
         }
 
-        if (this.discountAmount > 0) {
+        if (this.discountAmount > 0 && this.appliedPromoCode != null) 
+        {
             summary.append(String.format("Promo Discount (%s): -$%.2f\n",
-                    (appliedPromoCode != null ? appliedPromoCode : "Applied"), this.discountAmount));
+            appliedPromoCode, this.discountAmount));
         }
 
         summary.append("------------------------------------------\n");

@@ -115,7 +115,8 @@ public class Main {
             System.out.println("3. Create/Read/Update/Delete Amenity");
             System.out.println("4. Set Seasonal Multiplier    5. Financial Report");
             System.out.println("6. View All Guests            7. View All Reservations");
-            System.out.println("8. Logout");
+            System.out.println("8. View All Rooms");
+            System.out.println("9. Logout");
             System.out.print("Action: ");
 
             try {
@@ -135,7 +136,7 @@ public class Main {
                         try {
                             if (op.equals("1")) {
                                 System.out.print("Enter new Room Number: ");
-                                int roomNum = Integer.parseInt(sc.nextLine()); // Use parseInt to avoid Scanner bugs!
+                                int roomNum = Integer.parseInt(sc.nextLine()); 
 
                                 System.out.print("Enter Floor Number: ");
                                 int floorNum = Integer.parseInt(sc.nextLine());
@@ -149,20 +150,94 @@ public class Main {
                                 admin.createRoom(new Room(roomNum, floorNum, assignedType));
                                 System.out.println("Success! Room created.");
                             }
-                            else if (op.equals("2")) {
-                                System.out.print("Enter Room Number to read: ");
-                                int roomNum = Integer.parseInt(sc.nextLine());
-                                Room r = admin.readRoom(roomNum);
-                                System.out.println("Found Room: " + r.getRoomNumber() + " on floor " + r.getFloor() + "\nRoomType: "+r.getRoomType().getTypeName());
+                            else if (op.equals("2"))
+                            {
+                                try
+                                {
+                                    System.out.print("Enter Room Number to read: ");
+                                    int roomNum = Integer.parseInt(sc.nextLine());
+                                    Room r = admin.readRoom(roomNum);
+                                    System.out.println("Found Room: " + r.getRoomNumber() + " on floor " + r.getFloor() + "\nRoomType: "+r.getRoomType().getTypeName());
+                                    System.out.println("Amenties Included: ");
+                                    List<Amenity> list = r.getAmenities();
+                                    if (list == null || list.isEmpty())
+                                    {
+                                        System.out.println("  [No amenities assigned to this room]");
+                                    } else
+                                    {
+                                        // Loop through the list to actually print the names
+                                        for (Amenity a : list)
+                                        {
+                                            System.out.println("  • " + a.getAmenityName() + " ($" + a.getAmenityPrice() + ")");
+                                        }
+                                    }
+                                }
+
+                                 catch (Exception e)
+                                {
+                                    // This will catch all those custom Exception messages we wrote earlier!
+                                    System.out.println("❌ ERROR: " + e.getMessage());
+                                }
+                                break;
+                            }
+                            else if (op.equals("3"))
+                            {
+                                System.out.print("Enter Room Number to update: ");
+                                int Name = Integer.parseInt(sc.nextLine());
+
+                                // To update, we first read the existing one, then modify it
+                                Room existing = admin.readRoom(Name);
+                                printDivider(" ADD-ON AMENITIES (Optional)");
+                                List<Amenity> allAmenities = Database.getAmenities();
+                                List<Amenity> chosenAmenities = new ArrayList<>();
+
+                                if (allAmenities.isEmpty()) {
+                                    System.out.println("  No amenities currently available.");
+                                } else {
+                                    System.out.println("  Select amenities to add to your stay (one per line, 0 when done):\n");
+                                    for (int i = 0; i < allAmenities.size(); i++) {
+                                        Amenity a = allAmenities.get(i);
+                                        System.out.printf("  [%d] %-35s $%.0f%n", i + 1, a.getAmenityName(), a.getAmenityPrice());
+                                    }
+
+                                    System.out.println("\n  Enter amenity number(s) to add (0 to skip):");
+                                    while (true) {
+                                        System.out.print("  > ");
+                                        String raw = sc.nextLine().trim();
+                                        if (raw.equals("0") || raw.isEmpty()) break;
+                                        try {
+                                            int idx = Integer.parseInt(raw);
+                                            if (idx >= 1 && idx <= allAmenities.size()) {
+                                                Amenity picked = allAmenities.get(idx - 1);
+                                                if (!chosenAmenities.contains(picked)) {
+                                                    chosenAmenities.add(picked);
+
+                                                    System.out.println("  ✔ Added: " + picked.getAmenityName());
+                                                } else {
+                                                    System.out.println("  Already added.");
+                                                }
+                                            } else {
+                                                System.out.println("  Invalid selection.");
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("  Please enter a number.");
+                                        }
+                                    }
+                                    existing.setAmenities(chosenAmenities);//this part doesnt work still
+                                    admin.updateRoom(Name, existing);
+                                    Database.saveData();
+                                }
                             }
                             else if (op.equals("4")) {
                                 System.out.print("Enter Room Number to delete: ");
                                 int roomNum = Integer.parseInt(sc.nextLine());
                                 admin.deleteRoom(roomNum);
                             }
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e)
+                        {
                             // This will catch all those custom Exception messages we wrote earlier!
-                            System.out.println("❌ ERROR: " + e.getMessage());
+                            System.out.println(" ERROR: " + e.getMessage());
                         }
                         break;
                     }
@@ -237,9 +312,9 @@ public class Main {
                                 System.out.println("Room Type deleted.");
                             }
                         } catch (IllegalArgumentException e) {
-                            System.out.println("❌ ERROR: Invalid Enum value. Please use SEA_VIEW, GARDEN_VIEW, or CITY_VIEW.");
+                            System.out.println(" ERROR: Invalid Enum value. Please use SEA_VIEW, GARDEN_VIEW, or CITY_VIEW.");
                         } catch (Exception e) {
-                            System.out.println("❌ ERROR: " + e.getMessage());
+                            System.out.println(" ERROR: " + e.getMessage());
                         }
                         break;
                     }
@@ -299,7 +374,7 @@ public class Main {
                                 admin.deleteAmenity(name);
                             }
                         } catch (Exception e) {
-                            System.out.println("❌ ERROR: " + e.getMessage());
+                            System.out.println(" ERROR: " + e.getMessage());
                         }
                         break;
                     }
@@ -317,7 +392,8 @@ public class Main {
                     }
                     case "6": admin.viewAllGuests(); break;
                     case "7": admin.viewAllReservations(); break;
-                    case "8": System.out.println("Logging out..."); return;
+                    case "8" :BookingEngine.viewAllRooms(); break;
+                    case "9": System.out.println("Logging out..."); return;
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -343,18 +419,20 @@ public class Main {
                     System.out.print("Add a Comment: ");
                     String comment = input.nextLine();
                     System.out.print("Rating: ");
-                    int rating = input.nextInt();
+                    int rating = Integer.parseInt(sc.nextLine());
                     Review review = new Review(rating, comment);
                     System.out.print("ID: ");
                     rec.manageCheckOut(Integer.parseInt(sc.nextLine()), review);
-
-                }break;
+                    input.close();
+                    break;  
+                }
                 case "3": rec.getDraftReservations().forEach(System.out::println); break;
                 case "4": rec.viewAllGuests(); break;
                 case "5": rec.viewAllReservations(); break;
                 case "6": System.out.println("Logging out..."); return;
                 default:
                     throw new IllegalStateException("Unexpected value: " + choice);
+                
             }
         }
     }
@@ -369,7 +447,8 @@ public class Main {
             System.out.println("3. Cancel Reservation");
             System.out.println("4. View & Pay Invoices");
             System.out.println("5. Reset Password");
-            System.out.println("6. Logout");
+            System.out.println("6.Top up your balance");
+            System.out.println("7. Logout");
             System.out.print("Action: ");
 
             String choice = sc.nextLine();
@@ -378,8 +457,12 @@ public class Main {
                     runBookingFlow(guest);
                     break;
                 }
+                case "2" : 
+                {
+                    guest.ViewReservation(guest.getUserName(), guest.getUniqueId());
+                    break;
+                }
                 case "3": {
-                    // 1. Automatically fetch reservations for THIS guest
                     List<Reservation> myActiveBookings = engine.getReservationsForGuest(guest);
 
                     if (myActiveBookings.isEmpty()) {
@@ -398,7 +481,6 @@ public class Main {
                         try {
                             int choice1 = Integer.parseInt(sc.nextLine());
                             if (choice1 > 0 && choice1 <= myActiveBookings.size()) {
-                                // 2. Pass the ID internally without the user ever typing it
                                 Reservation selected = myActiveBookings.get(choice1 - 1);
                                 engine.processCancellation(selected.getReservationID(), LocalDate.now());
                                 System.out.println("Cancellation request submitted successfully.");
@@ -418,6 +500,10 @@ public class Main {
                     break;
                 }
                 case "6": {
+                    engine.addbalance(guest,sc);
+                    break;
+                }
+                case "7": {
                     System.out.println("Logging out..."); 
                     return;
                 }
@@ -430,28 +516,28 @@ public class Main {
     private static void runBookingFlow(Guest guest) 
     {
         final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        printDivider("BOOK A ROOM — STEP 1 OF 5 : SELECT DATES");
+        printDivider("BOOK A ROOM - STEP 1 OF 5 : SELECT DATES");
     
-        // ── STEP 1 : Dates ───────────────────────────────────────────────────
+        //STEP 1 : Dates 
         LocalDate checkIn  = promptDate("Enter Check-In  Date (yyyy-MM-dd): ", DATE_FMT);
-        if (checkIn == null) { System.out.println("Booking cancelled."); return; }
+        if (checkIn == null || checkIn.isBefore(LocalDate.now())) { System.out.println("Booking cancelled."); return; }
     
         LocalDate checkOut = promptDate("Enter Check-Out Date (yyyy-MM-dd): ", DATE_FMT);
-        if (checkOut == null) { System.out.println("Booking cancelled."); return; }
+        if (checkOut == null || checkOut.isBefore(checkIn) || checkOut.isBefore(LocalDate.now())) { System.out.println("Booking cancelled."); return; }
     
         if (!checkOut.isAfter(checkIn)) {
-            System.out.println("✗  Check-out must be at least one day after check-in. Returning to menu.");
+            System.out.println("Check-out must be at least one day after check-in. Returning to menu.");
             return;
         }
     
         long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
-        System.out.println("  → " + nights + " night(s): " + checkIn + "  to  " + checkOut);
+        System.out.println("    " + nights + " night(s): " + checkIn + "  to  " + checkOut);
     
-        // ── STEP 2 : Choose Room ─────────────────────────────────────────────
+        //STEP 2 : Choose Room
         printDivider("STEP 2 OF 5 : CHOOSE A ROOM");
         List<Room> available = engine.getAvailableRooms(checkIn, checkOut);
         if (available.isEmpty()) {
-            System.out.println("✗  No rooms available for those dates. Try different dates.");
+            System.out.println("No rooms available for those dates. Try different dates.");
             return;
         }
     
@@ -466,7 +552,7 @@ public class Main {
                     r.getRoomNumber(),
                     rt.getTypeName(),
                     rt.getRoomView(),
-                    rt.getBasePrice(),
+                    rt.getEffectivePrice(),
                     rt.getMaxCapacity(),
                     stars);
         }
@@ -476,39 +562,37 @@ public class Main {
     
         // Show selected room details
         RoomType srt = selectedRoom.getRoomType();
-        System.out.println("\n  Selected → Room " + selectedRoom.getRoomNumber()
+        System.out.println("\n  Selected 2Room " + selectedRoom.getRoomNumber()
                 + "  |  Floor " + selectedRoom.getFloor()
                 + "  |  " + srt.getTypeName()
                 + "  |  " + srt.getRoomView()
                 + "  |  Max " + srt.getMaxCapacity() + " guests");
         System.out.println("  " + srt.getDescription());
     
-        // ── STEP 3 : Guests & Dining ─────────────────────────────────────────
+        //STEP 3 : Guests & Dining 
         printDivider("STEP 3 OF 5 : GUESTS & DINING PACKAGE");
     
         int adults   = promptPositiveInt("Number of Adults   : ", 1, srt.getMaxCapacity());
         int children = promptPositiveInt("Number of Children : ", 0, srt.getMaxCapacity() - adults);
     
-        // BUG FIX #6: capacity validated with friendly retry above via promptPositiveInt
     
         System.out.println("\n  Dining packages available:");
-        System.out.println("  [1] BREAKFAST_ONLY  — Complimentary breakfast");
-        System.out.println("  [2] HALF_BOARD      — Breakfast + Dinner  (+$300/night)");
-        System.out.println("  [3] FULL_BOARD      — All 3 meals          (+$500/night)");
-        System.out.println("  [4] ALL_INCLUSIVE   — Ultimate experience  (+$700/night)");
+        System.out.println("  [1] BREAKFAST_ONLY  - Complimentary breakfast");
+        System.out.println("  [2] HALF_BOARD      - Breakfast + Dinner  (+$300/night)");
+        System.out.println("  [3] FULL_BOARD      - All 3 meals          (+$500/night)");
+        System.out.println("  [4] ALL_INCLUSIVE   - Ultimate experience  (+$700/night)");
     
-        // Show personalised suggestions
+        
         List<String> suggestions = engine.suggestPackages(guest);
         if (!suggestions.isEmpty()) {
-            System.out.println("\n  ✦ Suggested for you:");
-            suggestions.forEach(s -> System.out.println("    → " + s));
+            System.out.println("\n   Suggested for you:");
+            suggestions.forEach(s -> System.out.println("    -2 " + s));
         }
     
         DiningPackage selectedDining = promptDiningPackage();
         if (selectedDining == null) { System.out.println("Booking cancelled."); return; }
     
-        // ── STEP 4 : Amenities ───────────────────────────────────────────────
-        // BUG FIX #1: amenity selection was completely missing
+        //STEP 4 : Amenities 
         printDivider("STEP 4 OF 5 : ADD-ON AMENITIES (Optional)");
         List<Amenity> allAmenities = Database.getAmenities();
         List<Amenity> chosenAmenities = new ArrayList<>();
@@ -533,31 +617,27 @@ public class Main {
                         Amenity picked = allAmenities.get(idx - 1);
                         if (!chosenAmenities.contains(picked)) {
                             chosenAmenities.add(picked);
-                            System.out.println("  ✔ Added: " + picked.getAmenityName());
+                            System.out.println("Added: " + picked.getAmenityName());
                         } else {
-                            System.out.println("  Already added.");
+                            System.out.println("Already added.");
                         }
                     } else {
-                        System.out.println("  Invalid selection.");
+                        System.out.println("Invalid selection.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("  Please enter a number.");
+                    System.out.println(" Please enter a number.");
                 }
             }
         }
     
-        // ── STEP 5 : Promo Code & Confirmation ──────────────────────────────
+        //STEP 5 : Promo Code & Confirmation 
         printDivider("STEP 5 OF 5 : PROMO CODE & CONFIRM");
     
-        System.out.print("  Enter a promo code (or press Enter to skip): ");
+        System.out.print("Enter a promo code (or press Enter to skip): ");
         String promoInput = sc.nextLine().trim();
-        // BUG FIX #5: normalise empty string → null so validatePromocode won't
-        // print "not found" noise for guests who simply skipped
         String promoCode = promoInput.isEmpty() ? null : promoInput.toUpperCase();
     
-        // ── Calculate costs for preview BEFORE creating anything ─────────────
-        // BUG FIX #7: we preview costs first; generateInvoice is only called
-        // after the guest explicitly confirms they want to proceed.
+        //Calculate costs for preview BEFORE creating anything 
         double roomCost    = engine.calculateRoomCost(selectedRoom, checkIn, checkOut);
         double diningCost  = engine.calculateDiningCost(selectedDining, (int) nights);
         double amenityCost = engine.calculateAmenityCost(chosenAmenities);
@@ -570,79 +650,74 @@ public class Main {
             if (multiplier < 1.0) {
                 discount = subtotal * (1.0 - multiplier);
                 total    = subtotal * multiplier;
-                System.out.println("  ✔ Promo code applied! You save $" + String.format("%.2f", discount));
+                System.out.println("Promo code applied! You save $" + String.format("%.2f", discount));
             } else {
-                System.out.println("  ✗ Promo code not valid or expired — no discount applied.");
+                System.out.println(" Promo code not valid or expired — no discount applied.");
                 promoCode = null;
             }
         }
     
         // Print itemised breakdown
-        System.out.println("\n  ┌─────────────────────────────────────────────┐");
-        System.out.println("  │           BOOKING SUMMARY                   │");
-        System.out.println("  ├─────────────────────────────────────────────┤");
-        System.out.printf ("  │  Room %-10s × %d night(s)%13s$%,-8.2f│%n",
-                selectedRoom.getRoomNumber(), nights, "", roomCost);
-        System.out.printf ("  │  Dining (%s)%-25s$%,-8.2f│%n",
-                selectedDining, "", diningCost);
+        System.out.println("\n----------------------------------------------------------");
+        System.out.println("                    BOOKING SUMMARY                         ");
+        System.out.println("\n----------------------------------------------------------");
+
+        System.out.printf ("  > Room %-10s x %d night(s)%13s$%,-8.2f%n", selectedRoom.getRoomNumber(), nights, "", roomCost);
+        System.out.printf ("  > Dining (%s)%-25s$%,-8.2f%n",selectedDining, "", diningCost);
+
         if (!chosenAmenities.isEmpty()) {
             for (Amenity a : chosenAmenities) {
-                System.out.printf("  │    + %-37s$%,-8.2f│%n",
+                System.out.printf("   + %-37s$%,-8.2f%n",
                         a.getAmenityName(), a.getAmenityPrice());
             }
         }
         if (discount > 0) {
-            System.out.printf("  │  Promo Discount (%s)%-21s-$%,-7.2f│%n",
+            System.out.printf("  > Promo Discount (%s)%-21s-$%,-7.2f%n",
                     promoInput, "", discount);
         }
-        System.out.println("  ├─────────────────────────────────────────────┤");
-        System.out.printf ("  │  TOTAL DUE%-35s$%,-8.2f│%n", "", total);
-        System.out.printf ("  │  Your Balance%-31s$%,-8.2f│%n", "", guest.getBalance());
-        System.out.println("  └─────────────────────────────────────────────┘");
+        System.out.println("\n");
+        System.out.printf ("  > TOTAL DUE%-35s$%,-8.2f%n", "", total);
+        System.out.printf ("  > Your Balance%-31s$%,-8.2f%n", "", guest.getBalance());
+        System.out.println("\n");
     
-        System.out.print("\n  Confirm this booking? (Y to confirm / N to cancel): ");
+        System.out.print("\n Confirm this booking? (Y to confirm / N to cancel): ");
         String confirm = sc.nextLine().trim().toUpperCase();
         if (!confirm.equals("Y")) {
-            System.out.println("  Booking cancelled. No charges made.");
+            System.out.println("Booking cancelled. No charges made.");
             return;
         }
     
-        // ── CREATE RESERVATION & INVOICE ─────────────────────────────────────
+        // CREATE RESERVATION & INVOICE
         try {
-            // createDraftReservation adds the reservation to DB with PENDING status
             Reservation draft = engine.createDraftReservation(
                     guest, selectedRoom, checkIn, checkOut,
                     selectedDining, children, adults);
     
-            // BUG FIX #1 (continued): attach chosen amenities to the draft
-            // BEFORE generateInvoice() so amenity cost is included correctly
             draft.setSelectedAmenities(chosenAmenities);
     
-            // BUG FIX #7: generateInvoice is only called here, after user confirmed
             Invoice invoice = engine.generateInvoice(draft, promoCode);
     
-            System.out.println("\n  ✔ Reservation #" + draft.getReservationID() + " created (PENDING).");
+            System.out.println("\n Reservation #" + draft.getReservationID() + " created (PENDING).");
     
-            // ── Offer to pay now ─────────────────────────────────────────────
-            System.out.print("  Pay now from your balance to confirm immediately? (Y/N): ");
+            //Offer to pay now 
+            System.out.print("   Pay now from your balance to confirm immediately? (Y/N): ");
             String payNow = sc.nextLine().trim().toUpperCase();
     
-            if (payNow.equals("Y")) {
-                if (guest.getBalance() >= invoice.getTotalAmount()) {
-                    // BUG FIX #3: confirmReservation (PENDING→CONFIRMED) THEN pay
+            if (payNow.equals("Y")) 
+            {
+                if (guest.getBalance() >= invoice.getTotalAmount()) 
+                {
                     boolean confirmed = engine.confirmReservation(
                             draft.getReservationID(), PaymentMethod.ONLINE);
     
                     if (confirmed) {
-                        // Now debit and mark invoice paid
                         invoice.pay(guest, PaymentMethod.ONLINE);
                         Database.saveData();
     
                         System.out.println("\n  ══════════════════════════════════════════");
-                        System.out.println("   ✔  BOOKING CONFIRMED!");
+                        System.out.println("    BOOKING CONFIRMED!");
                         System.out.println("   Reservation ID : " + draft.getReservationID());
-                        System.out.println("   Room           : " + selectedRoom.getRoomNumber()
-                                + "  (Floor " + selectedRoom.getFloor() + ")");
+                        System.out.println("   Room           : " + selectedRoom.getRoomNumber() + "  (Floor " + selectedRoom.getFloor() + ")");
                         System.out.println("   Check-In       : " + checkIn);
                         System.out.println("   Check-Out      : " + checkOut);
                         System.out.println("   Total Paid     : $" + String.format("%.2f", invoice.getTotalAmount()));
@@ -650,44 +725,41 @@ public class Main {
                         System.out.println("  ══════════════════════════════════════════");
                     }
                 } else {
-                    System.out.println("  ✗ Insufficient balance ($"
+                    System.out.println("   Insufficient balance ($"
                             + String.format("%.2f", guest.getBalance())
                             + "). Reservation saved as PENDING. Pay at check-in.");
                     Database.saveData();
                 }
             } else {
-                System.out.println("  Reservation saved as PENDING. Invoice #"
+                System.out.println("   Reservation saved as PENDING. Invoice #"
                         + invoice.getInvoiceID() + " will be due at check-in.");
                 Database.saveData();
             }
     
         } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("  ✗ Booking failed: " + e.getMessage());
+            System.out.println("Booking failed: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("  ✗ Unexpected error: " + e.getMessage());
+            System.out.println(" Unexpected error: " + e.getMessage());
         }
     }
-    
-    // ─────────────────────────────────────────────────────────────
+     
     //  UI / INPUT HELPERS
-    // ─────────────────────────────────────────────────────────────
-    
-    /** Prints a styled section divider with a title. */
-    private static void printDivider(String title) {
+    //-------------------------------------------------
+
+    // Prints a styled section divider with a title
+    private static void printDivider(String title) 
+    {
         int count = Math.max(0, 55 - title.length());
         StringBuilder line = new StringBuilder();
         for (int i = 0; i < count; i++) line.append('=');
         System.out.println("\n== " + title + " " + line.toString());
     }
     
-    /**
-     * Prompts for a LocalDate, retries on bad format, returns null if user
-     * types "0" to abort.
-     *
-     * Reuses User.Datechecker() which already validates yyyy-MM-dd format,
-     * avoiding duplication of the LocalDate.parse / DateTimeParseException logic.
-     */
-    private static LocalDate promptDate(String prompt, DateTimeFormatter fmt) {
+    // Prompts for a LocalDate, retries on bad format, returns null if user
+    // types "0" to abort.
+
+    private static LocalDate promptDate(String prompt, DateTimeFormatter fmt) 
+    {
         while (true) {
             System.out.print("  " + prompt);
             String raw = sc.nextLine().trim();
@@ -695,18 +767,14 @@ public class Main {
             if (User.Datechecker(raw)) {
                 return LocalDate.parse(raw, fmt);
             }
-            System.out.println("  ✗ Invalid format. Use yyyy-MM-dd  (or 0 to cancel).");
+            System.out.println("   Invalid format. Use yyyy-MM-dd  (or 0 to cancel).");
         }
     }
     
-    /**
-     * Prompts the user to pick a room from the available list.
-     * Retries on invalid input; returns null if user enters 0.
-     *
-     * BUG FIX #4: parseInt is guarded — a non-numeric input no longer
-     * crashes the flow.
-     */
-    private static Room promptRoomChoice(List<Room> available) {
+    // Prompts the user to pick a room from the available list.
+    // Retries on invalid input; returns null if user enters 0.
+    private static Room promptRoomChoice(List<Room> available) 
+    {
         while (true) {
             System.out.print("\n  Enter Room Number to book (0 to cancel): ");
             String raw = sc.nextLine().trim();
@@ -716,18 +784,14 @@ public class Main {
                 for (Room r : available) {
                     if (r.getRoomNumber() == num) return r;
                 }
-                System.out.println("  ✗ Room " + num + " is not in the available list above.");
+                System.out.println("   Room " + num + " is not in the available list above.");
             } catch (NumberFormatException e) {
-                System.out.println("  ✗ Please enter a valid room number.");
+                System.out.println("   Please enter a valid room number.");
             }
         }
     }
     
-    /**
-     * Prompts for an integer in [min, max].  Retries until valid.
-     *
-     * BUG FIX #4 & #6: guards parseInt and capacity.
-     */
+    //Prompts for an integer in [min, max].  Retries until valid
     private static int promptPositiveInt(String prompt, int min, int max) {
         while (true) {
             System.out.print("  " + prompt);
@@ -735,20 +799,16 @@ public class Main {
             try {
                 int val = Integer.parseInt(raw);
                 if (val >= min && val <= max) return val;
-                System.out.println("  ✗ Please enter a value between " + min + " and " + max + ".");
+                System.out.println("   Please enter a value between " + min + " and " + max + ".");
             } catch (NumberFormatException e) {
-                System.out.println("  ✗ Numbers only.");
+                System.out.println("   Numbers only.");
             }
         }
     }
     
-    /**
-     * Prompts for a DiningPackage by number.  Retries on bad input.
-     * Returns null if user enters 0 to cancel.
-     *
-     * BUG FIX #4: DiningPackage.valueOf() crash is eliminated — we now
-     * map via a numeric menu instead of free-text enum parsing.
-     */
+
+    //Prompts for a DiningPackage by number.  Retries on bad input.
+    //Returns null if user enters 0 to cancel.
     private static DiningPackage promptDiningPackage() {
         while (true) {
             System.out.print("\n  Your choice (1-4, 0 to cancel): ");
@@ -759,7 +819,7 @@ public class Main {
                 case "2": return DiningPackage.HALF_BOARD;
                 case "3": return DiningPackage.FULL_BOARD;
                 case "4": return DiningPackage.ALL_INCLUSIVE;
-                default: System.out.println("  ✗ Please enter 1, 2, 3, 4, or 0 to cancel.");
+                default: System.out.println("   Please enter 1, 2, 3, 4, or 0 to cancel.");
             }
         }
     }

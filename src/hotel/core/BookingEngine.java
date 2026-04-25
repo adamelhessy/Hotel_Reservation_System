@@ -42,6 +42,11 @@ public class BookingEngine
 
     public double validatePromocode(String code) 
     {
+        if (code == null) 
+        {
+            return 1.0; 
+        }
+    
         List<PromoCode> promos = Database.getPromoCodes();
 
         for (int i = 0; i < Database.getPromoCodes().size(); i++) 
@@ -63,7 +68,7 @@ public class BookingEngine
         return 1; 
     }
 
-    public List<Room> getAvailableRooms(LocalDate checkIn, LocalDate checkOut) 
+    public static List<Room> getAvailableRooms(LocalDate checkIn, LocalDate checkOut)
     {    
         if (checkIn == null || checkOut == null) {
             throw new IllegalArgumentException("Dates cannot be null.");
@@ -103,7 +108,7 @@ public class BookingEngine
         return available;
     }
 
-    public void viewAllRooms() 
+    public static void viewAllRooms()
     {
         System.out.println("--- All Hotel Rooms ---");
 
@@ -408,7 +413,6 @@ public class BookingEngine
     public double calculateTotalRevenue() 
     {
         double total = 0.0;
-        // No parameters means we check EVERYTHING in the database
         for (Invoice inv : Database.getInvoices()) {
             if (inv.isPaid()) {
                 total += inv.getTotalAmount();
@@ -454,23 +458,9 @@ public class BookingEngine
         if (nights <= 0) {
             nights = 1;
         }
-
-
         double roomPricePerNight = reservation.getRoom().getRoomType().getPricePerNight();
         double totalRoomCost = roomPricePerNight * nights;
-
-
-        double diningCostPerNight = 0;
-        if (reservation.getDiningpackage() != null) {
-            switch (reservation.getDiningpackage()) {
-                case BREAKFAST_ONLY : diningCostPerNight = 15.0;break;
-                case HALF_BOARD     : diningCostPerNight = 35.0;break;
-                case FULL_BOARD     : diningCostPerNight = 60.0;break;
-                case ALL_INCLUSIVE  : diningCostPerNight = 100.0;break;
-                default             : diningCostPerNight = 0.0;
-            }
-        }
-        double totalDiningCost = diningCostPerNight * nights;
+        double totalDiningCost = calculateDiningCost(reservation.getDiningpackage(), (int) nights);
 
 
         double totalAmenitiesCost = 0;
@@ -479,40 +469,43 @@ public class BookingEngine
                 totalAmenitiesCost += amenity.getAmenityPrice();
             }
         }
-
-
         double grandTotal = totalRoomCost + totalDiningCost + totalAmenitiesCost;
-
-
         return grandTotal;
     }
 
-    public double calculateOccupancyPercentage() {
-        java.util.List<hotel.model.entities.Room> allRooms = hotel.core.Database.getRooms();
-        java.util.List<Reservation> allReservations = hotel.core.Database.getReservations();
+    public double calculateOccupancyPercentage() 
+    {
+        List<Room> allRooms = Database.getRooms();
+        List<Reservation> allReservations = Database.getReservations();
 
         if (allRooms == null || allRooms.isEmpty()) {
             return 0.0;
         }
 
         LocalDate today = LocalDate.now();
+        int occupiedCount = 0;
 
-        java.util.Set<Integer> occupiedRoomNumbers = new java.util.HashSet<>();
+        // Loop through every physical room in the hotel
+        for (Room room : allRooms) {
+            
+            // For each room, check if there is a matching, active reservation
+            for (Reservation res : allReservations) {
+                boolean isThisRoom = (res.getRoom().getRoomNumber() == room.getRoomNumber());
+                boolean isConfirmed = (res.getStatus() == ReservationStatus.CONFIRMED);
+                boolean isCurrentlyStaying = !today.isBefore(res.getCheckinDate()) && today.isBefore(res.getCheckoutDate());
 
-        for (Reservation res : allReservations) {
-            boolean isConfirmed = (res.getStatus() == ReservationStatus.CONFIRMED);
-            boolean isCurrentlyStaying = !today.isBefore(res.getCheckinDate()) && today.isBefore(res.getCheckoutDate());
-
-            if (isConfirmed && isCurrentlyStaying) {
-                occupiedRoomNumbers.add(res.getRoom().getRoomNumber());
+                // If we find an active reservation for this specific room
+                if (isThisRoom && isConfirmed && isCurrentlyStaying) {
+                    occupiedCount++;
+                    break; // Stop checking reservations for this room and move to the next room
+                }
             }
         }
 
         double totalRooms = allRooms.size();
-        double occupiedCount = occupiedRoomNumbers.size();
-
         return (occupiedCount / totalRooms) * 100.0;
     }
+
     public void processCancellation(int reservationId, LocalDate cancelDate) {
         Reservation reservation = null;
         for (Reservation r : Database.getReservations()) {
@@ -538,8 +531,10 @@ public class BookingEngine
         }
     }
 
-    public List<Reservation> getReservationsForGuest(Guest guest) {
+    public List<Reservation> getReservationsForGuest(Guest guest) 
+    {
         List<Reservation> guestReservations = new ArrayList<>();
+
         for (Reservation res : Database.getReservations()) {
             // Match the reservation to the specific guest object or unique ID
             if (res.getGuest().getUserName().equals(guest.getUserName())) {
@@ -605,6 +600,8 @@ public class BookingEngine
                     selectedInv.pay(guest, method);
                         
                     if (selectedInv.isPaid()) {
+                        selectedInv.getReservation().setStatus(ReservationStatus.CONFIRMED);
+                        System.out.println("Reservation updated to CONFIRMED.");
                         Database.saveData(); 
                     }
                 }
@@ -616,5 +613,24 @@ public class BookingEngine
         }
     }
 
+    public void addbalance( Guest guest, Scanner sc){
+        System.out.println("Your current balance : "+guest.getBalance());
+        System.out.println("Please enter the amount to be added to your balance, 0 to cancel");
+        double amount = sc.nextDouble();
+        while(amount<=0){
+            if(amount == 0){
+                return;
+            }
+            else{
+                System.out.println("Invalid value, Please re-enter the amount");
+                amount=sc.nextDouble();
+            }
+
+        }
+        guest.Newbalance(amount);
+        System.out.println(amount+"EGP has been added to balance, current balance :"+guest.getBalance());
+        Database.saveData();
+    }
 }
+
 

@@ -39,7 +39,16 @@ public class Database
     public static List<Amenity> getAmenities() { return amenities; }
     public static List<Admin> getAdmins(){ return admins; }
     public static List<Receptionist> getReceptionists(){ return receptionists; }
-    
+
+    public static void setGuests(List<Guest> guests) { Database.guests = guests; }
+    public static void setRooms(List<Room> rooms) { Database.rooms = rooms; }
+    public static void setReservations(List<Reservation> reservations) { Database.reservations = reservations; }
+    public static void setInvoices(List<Invoice> invoices) { Database.invoices = invoices; }
+    public static void setRoomTypes(List<RoomType> roomTypes) { Database.roomTypes = roomTypes; }
+    public static void setAmenities(List<Amenity> amenities) { Database.amenities = amenities; }
+    public static void setAdmins(List<Admin> admins) { Database.admins = admins; }
+    public static void setReceptionists(List<Receptionist> receptionists) { Database.receptionists = receptionists; }
+
     private static final String FILE_NAME = "hotel_data.dat";
 
     public static void saveData() {
@@ -106,9 +115,22 @@ public class Database
         Amenity transfer = new Amenity("Airport Transfer", "Private VIP transfer to/from Hurghada International Airport", 600.0);
         Amenity aquaPark = new Amenity("Aqua Park VIP Pass", "Skip-the-line access to the giant water slides", 300.0);
         Amenity wifi = new Amenity("Premium WiFi", "High-speed internet across the resort and beach", 150.0);
-        
-        // FIX: Replaced List.of with Arrays.asList to guarantee compatibility
-        Database.getAmenities().addAll(Arrays.asList(scuba, kiteSurf, safari, spa, transfer, aquaPark, wifi));
+        // In-room amenities
+        Amenity extraBed        = new Amenity("Extra Bed",           "Foldable single bed, ideal for an extra child or guest",     350.0);
+        Amenity babyСot         = new Amenity("Baby Cot",            "Compact crib with bedding for infants",                      200.0);
+        Amenity coffeeMachine   = new Amenity("Coffee Machine",      "Nespresso machine with a daily capsule refill",              150.0);
+        Amenity minibar         = new Amenity("Stocked Minibar",     "Fridge stocked daily with soft drinks, water, and snacks",   400.0);
+        Amenity breakfastInBed  = new Amenity("Breakfast in Bed",    "Full breakfast delivered to your room each morning",         500.0);
+        Amenity lateCheckout    = new Amenity("Late Check-Out",      "Extend check-out to 4:00 PM at no extra hassle",             300.0);
+        Amenity earlyCheckin    = new Amenity("Early Check-In",      "Room guaranteed ready from 9:00 AM",                         300.0);
+        Amenity airportPickup   = new Amenity("Airport Pickup",      "Private car pickup from Hurghada International Airport",     700.0);
+        Amenity romanticSetup   = new Amenity("Romantic Room Setup", "Rose petals, candles, and a chilled bottle of sparkling juice", 800.0);
+        Amenity petFriendly     = new Amenity("Pet-Friendly Package","Extra cleaning service and a pet welcome kit",               450.0);
+        Amenity ironingBoard    = new Amenity("Ironing Board & Iron","Full-size board with steam iron delivered on request",        100.0);
+        Amenity safeBox         = new Amenity("In-Room Safe Box",    "Programmable digital safe for valuables",                     80.0);
+                
+        Database.getAmenities().addAll(Arrays.asList(
+            scuba, kiteSurf, safari, spa, transfer, aquaPark, wifi, extraBed, babyСot, coffeeMachine, minibar, breakfastInBed, lateCheckout, earlyCheckin, airportPickup, romanticSetup,petFriendly, ironingBoard, safeBox));
 
         // 3. Generate Realistic Room Types
         RoomType gardenView = new RoomType("Standard Garden Oasis", 2500.0, RoomView.GARDEN, "Comfortable room overlooking the lush resort gardens and palm trees.", 1.0, 2500.0, 2);
@@ -118,22 +140,81 @@ public class Database
 
         Database.getRoomTypes().addAll(Arrays.asList(gardenView, poolView, seaView, royalSuite));
 
-        // 4. Generate 50 Rooms (5 Floors, 10 Rooms per floor)
+            // 4. Generate 50 Rooms (5 Floors, 10 Rooms per floor)
         for (int floor = 1; floor <= 5; floor++) {
             for (int r = 1; r <= 10; r++) {
                 int roomNumber = (floor * 100) + r;
                 RoomType type;
-                if (r <= 4) type = gardenView;       // 40% Garden
-                else if (r <= 7) type = poolView;    // 30% Pool
-                else if (r <= 9) type = seaView;     // 20% Sea View
-                else type = royalSuite;              // 10% Suites
+                if (r <= 4)      type = gardenView;
+                else if (r <= 7) type = poolView;
+                else if (r <= 9) type = seaView;
+                else             type = royalSuite;
 
                 Room room = new Room(roomNumber, floor, type);
+
+                // --- UNIVERSAL (every room gets these) ---
                 room.addAmenity(wifi);
-                if (type.getTypeName().contains("Suite")) {
+                room.addAmenity(safeBox);
+
+                // --- ROYAL SUITE --- full luxury package
+                if (type == royalSuite) {
                     room.addAmenity(spa);
                     room.addAmenity(transfer);
+                    room.addAmenity(aquaPark);
+                    room.addAmenity(minibar);
+                    room.addAmenity(coffeeMachine);
+                    room.addAmenity(breakfastInBed);
+                    room.addAmenity(romanticSetup);
+                    room.addAmenity(lateCheckout);
+                    room.addAmenity(earlyCheckin);
+                    if (rand.nextBoolean()) room.addAmenity(extraBed);
                 }
+
+                // --- RED SEA PREMIUM (sea view) ---
+                else if (type == seaView) {
+                    room.addAmenity(aquaPark);
+                    room.addAmenity(coffeeMachine);
+                    room.addAmenity(minibar);
+                    if (rand.nextBoolean()) room.addAmenity(spa);
+                    if (rand.nextBoolean()) room.addAmenity(breakfastInBed);
+                    if (rand.nextBoolean()) room.addAmenity(lateCheckout);
+                    if (rand.nextDouble() > 0.6) room.addAmenity(romanticSetup);
+                    if (rand.nextDouble() > 0.7) room.addAmenity(extraBed);
+                }
+
+                // --- DELUXE POOL VIEW ---
+                else if (type == poolView) {
+                    room.addAmenity(aquaPark);
+                    room.addAmenity(coffeeMachine);
+                    if (rand.nextBoolean()) room.addAmenity(minibar);
+                    if (rand.nextBoolean()) room.addAmenity(kiteSurf);
+                    if (rand.nextDouble() > 0.6) room.addAmenity(extraBed);
+                    if (rand.nextDouble() > 0.7) room.addAmenity(lateCheckout);
+                    if (rand.nextDouble() > 0.8) room.addAmenity(breakfastInBed);
+                }
+
+                // --- STANDARD GARDEN OASIS ---
+                else {
+                    if (rand.nextBoolean()) room.addAmenity(coffeeMachine);
+                    if (rand.nextBoolean()) room.addAmenity(extraBed);
+                    if (rand.nextDouble() > 0.5) room.addAmenity(safari);
+                    if (rand.nextDouble() > 0.6) room.addAmenity(scuba);
+                    if (rand.nextDouble() > 0.7) room.addAmenity(ironingBoard);
+                    if (rand.nextDouble() > 0.8) room.addAmenity(minibar);
+                }
+
+                // --- FAMILY TOUCHES (floors 3-5 skew family-friendly) ---
+                if (floor >= 3) {
+                    if (rand.nextDouble() > 0.6) room.addAmenity(babyСot);
+                    if (rand.nextDouble() > 0.7) room.addAmenity(petFriendly);
+                }
+
+                // --- BUSINESS TOUCHES (floor 1-2 skew solo/business travellers) ---
+                if (floor <= 2) {
+                    if (rand.nextDouble() > 0.6) room.addAmenity(ironingBoard);
+                    if (rand.nextDouble() > 0.7) room.addAmenity(airportPickup);
+                }
+
                 Database.getRooms().add(room);
             }
         }

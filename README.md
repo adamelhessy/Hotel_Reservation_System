@@ -28,6 +28,8 @@
   - [Booking & Finance](#booking--finance)
   - [Interfaces](#interfaces)
   - [Core Infrastructure](#core-infrastructure)
+- [Amenity Catalogue](#-amenity-catalogue)
+- [Room Amenity Assignment](#-room-amenity-assignment)
 - [Team & Task Assignment](#-team--task-assignment)
 - [Dependency Map](#-dependency-map)
 - [Getting Started](#-getting-started)
@@ -229,9 +231,9 @@ Defined by **Omar**.
 |----------|--------|-------------|
 | `-` | `amenityName : String` | Display name of the amenity |
 | `-` | `description : String` | Short description |
-| `-` | `amenityPrice : double` | Per-stay surcharge |
+| `-` | `amenityPrice : double` | Per-stay surcharge (EGP) |
 
-Represents a bookable facility (e.g. minibar, safe, jacuzzi) that a guest can attach to a reservation.
+Represents either a bookable facility or an in-room comfort item. There are two categories in the system — **activity amenities** (e.g. scuba diving, desert safari) that a guest adds to a reservation during booking, and **room-level amenities** (e.g. minibar, extra bed) that are pre-assigned to specific rooms by the `Database` seeder. Both are stored as `Amenity` objects; the distinction is purely contextual.
 
 ---
 
@@ -239,8 +241,8 @@ Represents a bookable facility (e.g. minibar, safe, jacuzzi) that a guest can at
 
 | Modifier | Member | Description |
 |----------|--------|-------------|
-| `-` | `typeName : String` | e.g. "Standard", "Suite" |
-| `-` | `basePrice : double` | Nightly base rate |
+| `-` | `typeName : String` | e.g. "Standard Garden Oasis", "Hurghada Royal Suite" |
+| `-` | `basePrice : double` | Nightly base rate (EGP) |
 | `-` | `description : String` | Type description |
 | `-` | `seasonMultiplier : double` | Pricing multiplier (set by Admin) |
 | `-` | `roomView : RoomView` | View type for this room category |
@@ -256,7 +258,7 @@ Represents a bookable facility (e.g. minibar, safe, jacuzzi) that a guest can at
 | `-` | `roomNumber : int` | Unique room identifier |
 | `-` | `floor : int` | Floor number |
 | `-` | `roomType : RoomType` | Associated room type |
-| `-` | `amenities : List<Amenity>` | Attached amenities |
+| `-` | `amenities : List<Amenity>` | Pre-assigned room-level amenities |
 | `-` | `reviews : List<Review>` | Guest reviews for this room |
 | `+` | `addAmenity(Amenity) : void` | Add an amenity to this room |
 | `+` | `removeAmenity(Amenity) : void` | Remove an amenity |
@@ -269,7 +271,7 @@ Represents a bookable facility (e.g. minibar, safe, jacuzzi) that a guest can at
 
 | Modifier | Member | Description |
 |----------|--------|-------------|
-| `-` | `score : int` | Numeric rating |
+| `-` | `score : int` | Numeric rating (1–5) |
 | `-` | `comment : String` | Guest comment text |
 
 ---
@@ -304,7 +306,6 @@ Base class for all system users. Cannot be instantiated directly.
 | `-` | `phoneNumber : String` | |
 | `-` | `dateOfBirth : LocalDate` | |
 | `-` | `roomPreferences : List<String>` | Preference tags |
-| `-` | `roomOptions : RoomType` | Preferred room type |
 | `-` | `failedLoginAttempts : int` | Triggers account lock |
 | `-` | `accountStatus : AccountStatus` | `ACTIVE` or `LOCKED` |
 | `+` | `register() : void` | Collects guest-specific fields |
@@ -359,6 +360,8 @@ deleteRoomType(String typeName) : void
 ```java
 setSeasonalMultiplier(String roomType, double multiplier) : void
 generateFinancialReport(int days) : void
+DisplayRoomType() : void
+DisplayAmenity() : void
 ```
 
 ---
@@ -366,8 +369,10 @@ generateFinancialReport(int days) : void
 #### `Receptionist` *(extends Staff)*
 
 ```java
-manageCheckIn(int reservationId) : void   // Confirms reservation, marks room unavailable
-manageCheckOut(int reservationId) : void  // Completes reservation after payment is verified
+manageCheckIn(int reservationId) : void       // Confirms reservation (PENDING → CONFIRMED)
+manageCheckOut(int reservationId, Review) : void  // Completes reservation after payment verified
+addDraftReservation(Reservation) : void
+getDraftReservations() : List<Reservation>
 ```
 
 ---
@@ -416,6 +421,7 @@ Defined by **Mostafa**.
 | `-` | `discountAmount : double` |
 | `+` | `pay(Guest, PaymentMethod) : void` |
 | `+` | `getTotal() : double` |
+| `+` | `generateItemizedSummary() : String` |
 
 > `getTotal()` returns `totalAmount`
 > `pay()` deducts from `guest.balance`, sets `isPaid = true`, records method and date
@@ -431,6 +437,8 @@ Defined by **Mostafa**.
 | `-` | `expiryDate : LocalDate` |
 | `-` | `isActive : boolean` |
 | `+` | `isActive() : boolean` | Returns `true` only if active and not expired |
+
+Active promo codes seeded by the database: `HURGHADA2026` (15%), `SUMMER_SUN` (10%), `REDSEA_VIBES` (20%).
 
 ---
 
@@ -487,62 +495,142 @@ Defined by **Omar**. Centralised static in-memory storage hub with file persiste
 
 ```java
 public class Database {
-    private static List<Guest>       guests       = new ArrayList<>();
-    private static List<Room>        rooms        = new ArrayList<>();
-    private static List<Reservation> reservations = new ArrayList<>();
-    private static List<Invoice>     invoices     = new ArrayList<>();
-    private static List<RoomType>    roomTypes    = new ArrayList<>();
-    private static List<Amenity>     amenities    = new ArrayList<>();
-    private static List<Admin>       admins       = new ArrayList<>();
+    private static List<Guest>        guests        = new ArrayList<>();
+    private static List<Room>         rooms         = new ArrayList<>();
+    private static List<Reservation>  reservations  = new ArrayList<>();
+    private static List<Invoice>      invoices      = new ArrayList<>();
+    private static List<RoomType>     roomTypes     = new ArrayList<>();
+    private static List<Amenity>      amenities     = new ArrayList<>();
+    private static List<Admin>        admins        = new ArrayList<>();
     private static List<Receptionist> receptionists = new ArrayList<>();
-    private static List<PromoCode>   promoCodes   = new ArrayList<>();
+    private static List<PromoCode>    promoCodes    = new ArrayList<>();
 
-    public static void saveData()                                { ... }
-    public static void loadData()                                { ... }
+    public static void saveData()          { ... }  // Serializes all lists to hotel_data.dat
+    public static void loadData()          { ... }  // Deserializes from hotel_data.dat on startup
+    public static void initializeHotelData() { ... } // Seeds the Hurghada Beach Resort demo dataset
 }
 ```
 
 > ⚠️ `Database` is the **only** class in the system that uses static members.
+> `initializeHotelData()` runs automatically on first launch when the database file is empty.
 
 ---
 
 #### `BookingEngine`
 
-The `BookingEngine` contains all complex calculation and workflow logic. Each method was implemented by the team member indicated below, matching the UML assignment diagram.
+The `BookingEngine` contains all complex calculation and workflow logic. Each method was implemented by the team member indicated below.
 
 ```java
 public class BookingEngine {
 
     // Room availability & filtering
-    List<Room>   getAvailableRooms(LocalDate checkIn, LocalDate checkOut)     // Basel
-    List<Room>   filterRooms(String roomType, RoomView roomView, double maxPrice) // Basel
-    void         viewAllRooms()                                                // Basel
-    List<Room>   sortRooms(List<Room> rooms, boolean ascending)               // Basel
-    List<String> viewAllDiningPackages()                                       // Basel (implied)
-    List<String> suggestPackages(Guest guest)                                  // Basel
+    List<Room>   getAvailableRooms(LocalDate checkIn, LocalDate checkOut)          // Basel
+    List<Room>   filterRooms(String roomType, RoomView roomView, double maxPrice)  // Basel
+    void         viewAllRooms()                                                    // Basel
+    List<Room>   sortRooms(List<Room> rooms, boolean ascending)                   // Basel
+    List<String> viewAllDiningPackages()                                           // Basel
+    List<String> suggestPackages(Guest guest)                                      // Basel
 
     // Cost calculations
-    double calculateRoomCost(Room room, LocalDate in, LocalDate out)          // Basel
-    double calculateDiningCost(DiningPackage packageType, int nights)         // Omar
-    double calculateAmenityCost(List<Amenity> selectedAmenities)              // Adam
-    double calculateTotalReservationCost(Reservation reservation)             // Mostafa
+    double calculateRoomCost(Room room, LocalDate in, LocalDate out)              // Basel
+    double calculateDiningCost(DiningPackage packageType, int nights)             // Omar
+    double calculateAmenityCost(List<Amenity> selectedAmenities)                  // Adam
+    double calculateTotalReservationCost(Reservation reservation)                 // Mostafa
 
     // Booking & payment workflow
-    double      validatePromoCode(String code)                                // Belal
+    double      validatePromoCode(String code)                                    // Belal
     Reservation createDraftReservation(Guest, Room, LocalDate, LocalDate,
-                    DiningPackage, int, int, Receptionist)                    // Omar
-    boolean     confirmReservation(int reservationId, PaymentMethod method)   // Omar
-    void        processCancellation(int reservationId, LocalDate cancelDate)  // Mostafa (pending)
+                    DiningPackage, int, int)                                       // Omar
+    boolean     confirmReservation(int reservationId, PaymentMethod method)       // Omar
+    void        processCancellation(int reservationId, LocalDate cancelDate)      // Mostafa
     double      calculateCancellationPenalty(int reservationId,
-                    LocalDate cancelDate)                                      // Belal
-    Invoice     generateInvoice(Reservation reservation, String promoCode)    // Omar
+                    LocalDate cancelDate)                                          // Belal
+    Invoice     generateInvoice(Reservation reservation, String promoCode)        // Omar
+
+    // Guest helpers
+    List<Reservation> getReservationsForGuest(Guest guest)                        // Omar
+    static void       viewAndPayInvoices(Guest guest, Scanner sc)                 // Omar
 
     // Financial reporting
-    double calculateTotalRevenue()                                             // Adam
-    double calcualteTotalRevenue(LocalDate startDate, LocalDate endDate)      // Adam
-    double calculateOccupancyPercentage()                                      // Mostafa
+    double calculateTotalRevenue()                                                 // Adam
+    double calcualteTotalRevenue(LocalDate startDate, LocalDate endDate)          // Adam
+    double calculateOccupancyPercentage()                                          // Mostafa
 }
 ```
+
+---
+
+## 🛎 Amenity Catalogue
+
+All amenities are seeded by `Database.initializeHotelData()` and stored in `Database.getAmenities()`. They are split into two conceptual categories, though both are plain `Amenity` objects at the code level.
+
+### Activity & Experience Amenities
+*(Available for guests to add during Step 4 of the booking flow)*
+
+| Amenity | Description | Price (EGP) |
+|---------|-------------|-------------|
+| Scuba Diving Excursion | Guided dive in the Giftun Island coral reefs | 1,500 |
+| Kitesurfing Lesson | 2-hour beginner lesson on the private beach | 1,200 |
+| Desert Quad Safari | Sunset quad biking in the Eastern Desert with Bedouin tea | 900 |
+| Red Sea Spa | Full body massage with Dead Sea minerals | 1,800 |
+| Airport Transfer | Private VIP transfer to/from Hurghada International Airport | 600 |
+| Aqua Park VIP Pass | Skip-the-line access to the giant water slides | 300 |
+| Premium WiFi | High-speed internet across the resort and beach | 150 |
+
+### In-Room Comfort Amenities
+*(Pre-assigned to rooms by room tier; also selectable during booking)*
+
+| Amenity | Description | Price (EGP) |
+|---------|-------------|-------------|
+| Extra Bed | Foldable single bed, ideal for an extra child or guest | 350 |
+| Baby Cot | Compact crib with bedding for infants | 200 |
+| Coffee Machine | Nespresso machine with a daily capsule refill | 150 |
+| Stocked Minibar | Fridge stocked daily with soft drinks, water, and snacks | 400 |
+| Breakfast in Bed | Full breakfast delivered to your room each morning | 500 |
+| Late Check-Out | Extend check-out to 4:00 PM | 300 |
+| Early Check-In | Room guaranteed ready from 9:00 AM | 300 |
+| Airport Pickup | Private car pickup from Hurghada International Airport | 700 |
+| Romantic Room Setup | Rose petals, candles, and a chilled bottle of sparkling juice | 800 |
+| Pet-Friendly Package | Extra cleaning service and a pet welcome kit | 450 |
+| Ironing Board & Iron | Full-size board with steam iron delivered on request | 100 |
+| In-Room Safe Box | Programmable digital safe for valuables | 80 |
+
+> All prices are in Egyptian Pounds (EGP) to match the resort's Hurghada setting.
+
+---
+
+## 🛏 Room Amenity Assignment
+
+Rooms are seeded with amenities based on their type tier and floor. The table below summarises the assignment logic in `Database.initializeHotelData()`.
+
+| Amenity | Garden Oasis | Deluxe Pool | Red Sea Premium | Royal Suite |
+|---------|:---:|:---:|:---:|:---:|
+| Premium WiFi | ✅ | ✅ | ✅ | ✅ |
+| In-Room Safe Box | ✅ | ✅ | ✅ | ✅ |
+| Coffee Machine | 50% chance | ✅ | ✅ | ✅ |
+| Stocked Minibar | 20% chance | 50% chance | ✅ | ✅ |
+| Aqua Park VIP Pass | — | ✅ | ✅ | ✅ |
+| Red Sea Spa | — | — | 50% chance | ✅ |
+| Breakfast in Bed | — | 20% chance | 50% chance | ✅ |
+| Late Check-Out | — | 30% chance | 50% chance | ✅ |
+| Early Check-In | — | — | — | ✅ |
+| Romantic Room Setup | — | — | 40% chance | ✅ |
+| Extra Bed | 50% chance | 40% chance | 30% chance | 50% chance |
+| Kitesurfing Lesson | — | 40% chance | — | — |
+| Desert Quad Safari | 50% chance | — | — | — |
+| Scuba Diving Excursion | 40% chance | — | — | — |
+| Ironing Board & Iron | 30% chance | — | — | — |
+
+**Floor-based overlay (applied on top of room-type tier):**
+
+| Floor | Extra amenity | Chance |
+|-------|---------------|--------|
+| Floors 3 – 5 | Baby Cot | 40% |
+| Floors 3 – 5 | Pet-Friendly Package | 30% |
+| Floors 1 – 2 | Ironing Board & Iron | 40% |
+| Floors 1 – 2 | Airport Pickup | 30% |
+
+> The randomness means no two floors are identical, which makes the room browser feel realistic during the demo.
 
 ---
 
@@ -550,10 +638,10 @@ public class BookingEngine {
 
 | # | Member | Domain | Responsibilities |
 |---|--------|--------|-----------------|
-| 01 | **Omar** | Foundation, Infrastructure & Debugging | `AccountStatus`, `DiningPackage`, `PaymentMethod`, `ReservationStatus`, `Gender`, `RoomView`, `UserType`, `Amenity`, `RoomType`, `Room`, `Review`, `Manageable`, `Payable`, `Database`, folder structure, file pathing, UML diagram · `BookingEngine`: `calculateDiningCost`, `createDraftReservation`, `confirmReservation`, `generateInvoice` · **System-wide debugging** |
+| 01 | **Omar** | Foundation, Infrastructure & Debugging | `AccountStatus`, `DiningPackage`, `PaymentMethod`, `ReservationStatus`, `Gender`, `RoomView`, `UserType`, `Amenity`, `RoomType`, `Room`, `Review`, `Manageable`, `Payable`, `Database`, folder structure, file pathing, UML diagram · `BookingEngine`: `calculateDiningCost`, `createDraftReservation`, `confirmReservation`, `generateInvoice`, `getReservationsForGuest`, `viewAndPayInvoices` · **System-wide debugging** |
 | 02 | **Belal** | User Hierarchy, Authentication & Debugging | `User` *(abstract)*, `Guest`, `Staff` *(abstract)* · `BookingEngine`: `validatePromoCode`, `calculateCancellationPenalty` · **System-wide debugging** |
 | 03 | **Adam** | Administration, Operations & Debugging | `Admin` CRUD methods, `Receptionist` · `BookingEngine`: `calculateAmenityCost`, `calculateTotalRevenue` (both overloads) · **System-wide debugging** |
-| 04 | **Mostafa** | Booking, Finance & Console Testing | `Reservation`, `Invoice` · `BookingEngine`: `calculateTotalReservationCost`, `calculateOccupancyPercentage` · **`Main` console test runner** |
+| 04 | **Mostafa** | Booking, Finance & Console Testing | `Reservation`, `Invoice` · `BookingEngine`: `calculateTotalReservationCost`, `calculateOccupancyPercentage`, `processCancellation` · **`Main` console test runner** |
 | 05 | **Basel** | Room Logic & Console Testing | `BookingEngine`: `getAvailableRooms`, `filterRooms`, `viewAllRooms`, `sortRooms`, `suggestPackages`, `calculateRoomCost` · **`Main` console test runner** |
 
 ---
@@ -615,46 +703,25 @@ java -cp out hotel.core.Main
 
 The `Main` class is the entry point for Milestone 1. It runs a full end-to-end simulation in the console — no GUI required. The console test runner was implemented by **Basel** and **Mostafa**.
 
+On first launch, if `hotel_data.dat` does not exist or is empty, `Database.initializeHotelData()` seeds the full **Hurghada Beach Resort** dataset automatically:
+
 ```
-$ java -cp out hotel.core.Main
-
-=== Hotel Reservation System — Console Test ===
-
-[DATABASE] Initializing sample data...
-  ✔ 3 room types loaded
-  ✔ 10 rooms loaded
-  ✔ 5 amenities loaded
-
-[GUEST] Registering new guest: alice_smith
-  ✔ Guest registered successfully
-
-[ADMIN] Creating new room type: Presidential Suite
-  ✔ Room type created
-
-[ADMIN] Setting seasonal multiplier for Suite: 1.4
-  ✔ Multiplier updated — effective price: $420.00/night
-
-[GUEST] alice_smith logged in successfully
-[GUEST] Viewing available rooms for 2025-12-20 → 2025-12-25
-
-[RECEPTIONIST] Check-in for reservation #1042
-  ✔ Reservation confirmed
-  ✔ Room 204 marked unavailable
-
-[GUEST] Paying invoice #5 via CREDIT_CARD
-  ✔ Payment processed — total: $2,340.00
-
-[RECEPTIONIST] Check-out for reservation #1042
-  ✔ Reservation completed
-  ✔ Room 204 marked available
-
-[ADMIN] Generating financial report (last 30 days)
-  Total revenue:        $18,450.00
-  Occupancy rate:       74.5%
-  Cancellations:        2
-
-=== All tests passed ✔ ===
+[SYSTEM] Database is empty. Seeding default hotel data...
+[SEEDER] Initialization complete! Hurghada resort loaded with:
+  -> 50 Rooms
+  -> 50 Guests
+  -> 50 Reservations
+  -> ~35 Invoices
+  -> 20 Reviews generated.
 ```
+
+**Default test credentials:**
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin_ahmed` | `Admin@2026` |
+| Receptionist | `rec_mahmoud` | `Desk@2026` |
+| Guest | `guest_test` | `Test@123` |
 
 ---
 
@@ -672,19 +739,25 @@ The full guest lifecycle covered by the console test runner:
 3. BookingEngine finds available rooms and calculates cost
             │
             ▼
-4. Guest creates a Reservation (status: PENDING)
+4. Guest selects room, dining package, and add-on amenities
             │
             ▼
-5. Receptionist manages check-in (status: CONFIRMED, room unavailable)
+5. Guest applies promo code (optional) and confirms booking
             │
             ▼
-6. Guest pays Invoice (balance debited, isPaid = true)
+6. Reservation created (status: PENDING), Invoice generated
             │
             ▼
-7. Receptionist manages check-out (status: COMPLETED, room available)
+7. Receptionist manages check-in (status: CONFIRMED)
             │
             ▼
-8. Admin generates financial report
+8. Guest pays Invoice (balance debited, isPaid = true)
+            │
+            ▼
+9. Receptionist manages check-out with review (status: COMPLETED)
+            │
+            ▼
+10. Admin generates financial report
 ```
 
 ---
@@ -720,6 +793,7 @@ main
 | Only `Database` uses `static` | All other classes are instance-based |
 | Packages match folder structure | `hotel.model.enums`, `hotel.core`, etc. |
 | All entity classes implement `Serializable` | Required for `Database` file persistence |
+| All prices in EGP | Consistent with Hurghada resort context |
 
 ---
 
