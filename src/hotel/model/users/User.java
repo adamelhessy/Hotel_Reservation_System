@@ -344,5 +344,76 @@ public abstract class User implements Serializable {
                 }
     }
 
+
+    // GUI-friendly Login method (Overloaded)
+    public User Login(String currentName, String currentPass, UserType expectedType) 
+    {
+        this.Typeofuser = expectedType;
+
+        if (accountStatus == AccountStatus.LOCKED) {
+            System.out.println("This account is locked. Please contact an administrator.");
+            return null;
+        }
+
+        if (Typeofuser == UserType.GUEST) {
+            for (Guest guest : Database.getGuests()) {
+                if (guest.getUserName() != null && guest.getUserName().equals(currentName) && guest.getPassword().equals(currentPass)) {
+                    if (guest.getAccountStatus() == AccountStatus.ACTIVE) {
+                        System.out.println("Access Granted. Welcome, " + currentName + "!");
+                        this.failedLoginAttempts = 0; // Reset attempts on success
+                        return guest; 
+                    } else {
+                        System.out.println("Access Denied: Account is locked.");
+                        return null;
+                    }
+                }
+            }
+        } else if (Typeofuser == UserType.RECEPTIONIST) {
+            for (Receptionist rec : Database.getReceptionists()) {
+                if (rec.getUserName() != null && rec.getUserName().equals(currentName) && rec.getPassword().equals(currentPass)) {
+                    if (rec.getAccountStatus() == AccountStatus.ACTIVE) {
+                        System.out.println("Access Granted. Welcome, " + currentName + "!");
+                        this.failedLoginAttempts = 0;
+                        return rec;
+                    } else {
+                        System.out.println("Access Denied: Account is locked.");
+                        return null;
+                    }
+                }
+            }
+        } else if (Typeofuser == UserType.ADMIN) {
+            for (Admin admin : Database.getAdmins()) {
+                if (admin.getUserName() != null && admin.getUserName().equals(currentName) && admin.getPassword().equals(currentPass)) {
+                    if (admin.getAccountStatus() == AccountStatus.ACTIVE) {
+                        System.out.println("Access Granted. Welcome, " + currentName + "!");
+                        this.failedLoginAttempts = 0;
+                        return admin;
+                    } else {
+                        System.out.println("Access Denied: Account is locked.");
+                        return null;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Access Denied. Invalid credentials.");
+        failedLoginAttempts++;
+        
+        if (failedLoginAttempts >= 5) {
+            // Lock the account if it exists in the DB
+            for (Guest g : Database.getGuests()) {
+                if (g.getUserName().equals(currentName)) {
+                    g.setAccountStatus(AccountStatus.LOCKED);
+                    Database.saveData();
+                    break;
+                }
+            }
+            System.out.println("Too many attempts. Account is now locked.");
+        }
+        return null;
+    }
+
+
+
 }
 

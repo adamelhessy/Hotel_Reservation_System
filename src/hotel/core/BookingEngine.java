@@ -9,6 +9,9 @@ import hotel.model.enums.RoomView;
 import hotel.model.staff.Receptionist;
 import hotel.model.users.Guest;
 import hotel.model.bookings.*;
+import hotel.model.customexceptions.InvalidBookingDatesException;
+import hotel.model.customexceptions.RoomCapacityExceededException;
+
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -546,12 +549,11 @@ public class BookingEngine
         }
         return guestReservations;
     }
-
-    public static void viewAndPayInvoices(Guest guest , Scanner sc) 
+    public static void viewAndPayInvoices(Guest guest , Scanner sc)
     {
         System.out.println("\n--- Your Unpaid Invoices ---");
         List<Invoice> myUnpaidInvoices = new ArrayList<>();
-        
+
         for (Invoice inv : Database.getInvoices()) {
             if (!inv.isPaid() && inv.getReservation().getGuest().getUserName().equals(guest.getUserName())) {
                 myUnpaidInvoices.add(inv);
@@ -566,22 +568,22 @@ public class BookingEngine
 
         for (int i = 0; i < myUnpaidInvoices.size(); i++) {
             Invoice inv = myUnpaidInvoices.get(i);
-            System.out.println((i + 1) + ". Invoice ID: " + inv.getInvoiceID() + 
-                               " | Amount: $" + String.format("%.2f", inv.getTotalAmount()) + 
-                               " | Reservation ID: " + inv.getReservation().getReservationID());
+            System.out.println((i + 1) + ". Invoice ID: " + inv.getInvoiceID() +
+                    " | Amount: $" + String.format("%.2f", inv.getTotalAmount()) +
+                    " | Reservation ID: " + inv.getReservation().getReservationID());
         }
 
         System.out.print("Enter the number of the invoice to pay (or 0 to exit): ");
         try {
             int invChoice = Integer.parseInt(sc.nextLine());
-            
+
             // Fixed the bounds check to include the last item (<=)
             if (invChoice <= myUnpaidInvoices.size() && invChoice > 0) {
                 Invoice selectedInv = myUnpaidInvoices.get(invChoice - 1);
 
                 System.out.println(selectedInv.generateItemizedSummary());
                 System.out.println("Your Current Balance: $" + String.format("%.2f", guest.getBalance()));
-                
+
                 System.out.println("\nSelect Payment Method:");
                 System.out.println("1. Credit Card   2. Cash   3. Online   0. Cancel");
                 System.out.print("Choice: ");
@@ -589,20 +591,24 @@ public class BookingEngine
 
                 PaymentMethod method = null;
                 switch(payChoice) {
-                    case "1": method = PaymentMethod.CREDIT_CARD; break;
+                    case "1":{ method = PaymentMethod.CREDIT_CARD;
+                        addbalance(guest,sc);
+                        break;}
                     case "2": method = PaymentMethod.CASH; break;
-                    case "3": method = PaymentMethod.ONLINE; break;
+                    case "3":{ method = PaymentMethod.ONLINE;
+                        addbalance(guest,sc);
+                        break;}
                     case "0": System.out.println("Payment cancelled."); break;
-                    default: System.out.println("Invalid selection."); break;      
+                    default: System.out.println("Invalid selection."); break;
                 }
-                
+
                 if (method != null) {
                     selectedInv.pay(guest, method);
-                        
+
                     if (selectedInv.isPaid()) {
                         selectedInv.getReservation().setStatus(ReservationStatus.CONFIRMED);
                         System.out.println("Reservation updated to CONFIRMED.");
-                        Database.saveData(); 
+                        Database.saveData();
                     }
                 }
             } else if (invChoice != 0) {
@@ -612,18 +618,17 @@ public class BookingEngine
             System.out.println("Invalid input. Please enter a valid number.");
         }
     }
-
-    public void addbalance( Guest guest, Scanner sc){
+    public static void addbalance( Guest guest, Scanner sc){
         System.out.println("Your current balance : "+guest.getBalance());
         System.out.println("Please enter the amount to be added to your balance, 0 to cancel");
-        double amount = sc.nextDouble();
+        double amount = Double.parseDouble(sc.nextLine());
         while(amount<=0){
             if(amount == 0){
                 return;
             }
             else{
                 System.out.println("Invalid value, Please re-enter the amount");
-                amount=sc.nextDouble();
+                amount = Double.parseDouble(sc.nextLine());
             }
 
         }
@@ -631,6 +636,34 @@ public class BookingEngine
         System.out.println(amount+"EGP has been added to balance, current balance :"+guest.getBalance());
         Database.saveData();
     }
+
+
+
+    public void  validateCheckInDate ( LocalDate checkIn ) throws InvalidBookingDatesException
+    {
+        if (checkIn == null || checkIn.isBefore(LocalDate.now())) 
+        { 
+            throw new InvalidBookingDatesException("You can't check-in in the past!");
+        }
+    }
+
+    public void validateCheckOutDate(LocalDate checkIn, LocalDate checkOut) throws InvalidBookingDatesException 
+    {
+        if (checkOut == null || checkOut.isBefore(checkIn) || checkOut.isEqual(checkIn)) 
+        { 
+            throw new InvalidBookingDatesException("Check-out date must be at least one day after check-in.");
+        }
+    }
+
+    public void validateRoomCapacity (Room requestedRoom, int numberOfGuests) throws RoomCapacityExceededException
+    {
+        if (numberOfGuests > requestedRoom.getRoomType().getMaxCapacity())
+        {
+            throw new RoomCapacityExceededException("Capacity exceeded! A " + requestedRoom.getRoomType() + " room can only hold a maximum of " + requestedRoom.getRoomType().getMaxCapacity() + " guests.");
+        }
+    }
+
+
 }
 
 

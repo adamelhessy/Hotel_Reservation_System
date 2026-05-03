@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Guest Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#002115",
+                        "on-secondary-fixed": "#001c38",
+                        "primary": "#00291c",
+                        "on-secondary-fixed-variant": "#2b486b",
+                        "on-secondary-container": "#3f5b7f",
+                        "on-tertiary-fixed-variant": "#673d00",
+                        "surface-tint": "#006c4e",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#31312b",
+                        "outline": "#73777f",
+                        "outline-variant": "#c3c6cf",
+                        "surface": "#fcf9f1",
+                        "on-tertiary-fixed": "#2b1700",
+                        "secondary-fixed-dim": "#abc9f2",
+                        "tertiary-container": "#543000",
+                        "surface-bright": "#fcf9f1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#dcdad2",
+                        "surface-container-high": "#eae8e0",
+                        "on-surface": "#1c1c17",
+                        "surface-container": "#f0eee5",
+                        "secondary": "#436084",
+                        "surface-variant": "#e5e2da",
+                        "surface-container-low": "#f6f4eb",
+                        "secondary-fixed": "#d2e4ff",
+                        "tertiary-fixed": "#ffdcbb",
+                        "inverse-primary": "#68dbae",
+                        "primary-fixed-dim": "#68dbae",
+                        "secondary-container": "#b6d4fe",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#3fb68b",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-container": "#00412e",
+                        "background": "#fcf9f1",
+                        "inverse-on-surface": "#f3f1e8",
+                        "tertiary": "#361d00",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e5e2da",
+                        "on-surface-variant": "#43474e",
+                        "on-tertiary-container": "#dd9235",
+                        "primary-fixed": "#86f8c9",
+                        "on-primary-fixed-variant": "#00513a",
+                        "on-background": "#1c1c17",
+                        "tertiary-fixed-dim": "#ffb869",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased flex">
+<!-- Screen Label -->
+<div class="fixed top-2 left-2 z-50 text-xs font-mono text-outline bg-surface-container-highest px-2 py-1 rounded opacity-50 pointer-events-none">
+        Screen 2 — Guest Dashboard
+    </div>
+<!-- SideNavBar -->
+<nav class="w-[220px] h-screen fixed left-0 top-0 bg-[#00291c] dark:bg-slate-950 shadow-none flex flex-col h-full z-50">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Hotel Logo" class="w-full h-full object-cover" data-alt="minimalist gold and deep green abstract monogram logo for a luxury hotel brand, high resolution" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf70aD4p4K6Nm3hLjhnhq-o4XS5EkXNkpJPTf-2aU3P-DiFEob3f9csS7ZztDDE7zEVkHFRfocZuj8ye0FPDgCHr9Vie1y8l6mr6DnGcOn4YXXaYYofrAi6KrKX3u5uJFM2DnJUUM9MK0rkrua0jA95EPjMT7NDmJhF7IvBPhaKs4aQ1CwOupVM0K0TnQp_zbPB7As-cZG_dnC7t0Ry1vqmIYQoagwGLEZOcbj-_18yfc9e3QZQ2tcLbszYJSSKgdcUabzszyk9VQ"/>
+</div>
+<div>
+<h1 class="text-lg font-bold text-white uppercase tracking-widest leading-tight">Grand Heritage</h1>
+<p class="text-xs text-secondary-fixed-dim font-medium tracking-wide">Hotel &amp; Spa</p>
+</div>
+</div>
+<ul class="flex flex-col space-y-2 mt-4 font-inter text-sm tracking-wide">
+<li>
+<a class="flex items-center gap-3 border-l-4 border-[#3fb68b] text-white bg-white/5 py-3 px-4 scale-100 active:scale-95 transition-transform hover:bg-white/10 transition-all rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                        Concierge
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 border-l-4 border-transparent text-slate-400 py-3 px-4 hover:text-white transition-colors scale-100 active:scale-95 transition-transform hover:bg-white/10 transition-all rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+                        Reservations
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 border-l-4 border-transparent text-slate-400 py-3 px-4 hover:text-white transition-colors scale-100 active:scale-95 transition-transform hover:bg-white/10 transition-all rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="bed">bed</span>
+                        Room Map
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 border-l-4 border-transparent text-slate-400 py-3 px-4 hover:text-white transition-colors scale-100 active:scale-95 transition-transform hover:bg-white/10 transition-all rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                        Guest Profiles
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 border-l-4 border-transparent text-slate-400 py-3 px-4 hover:text-white transition-colors scale-100 active:scale-95 transition-transform hover:bg-white/10 transition-all rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                        Analytics
+                    </a>
+</li>
+</ul>
+</div>
+<div class="mt-auto p-6">
+<button class="w-full bg-gradient-to-b from-primary to-primary-container text-on-primary py-3 rounded-DEFAULT font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(0,41,28,0.2)]">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Booking
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="ml-[220px] flex-1 flex flex-col min-h-screen relative">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-220px)] h-16 z-40 bg-[#fcf9f1] dark:bg-slate-900 border-b border-surface-container-highest/0 bg-[#f6f4eb] dark:bg-slate-800 flat no-shadows flex justify-between items-center px-8 transition-opacity duration-200">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-black text-[#00291c] dark:text-white tracking-tighter">The Digital Concierge</h2>
+<div class="h-4 w-px bg-outline-variant/30 hidden md:block"></div>
+<h3 class="text-lg font-medium text-on-surface-variant hidden md:block">Dashboard</h3>
+</div>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-surface-container-high border-b border-outline-variant/30 border-t-0 border-l-0 border-r-0 focus:border-on-primary-container focus:ring-0 text-sm w-64 transition-colors text-on-surface placeholder-outline font-inter" placeholder="Search guests, rooms..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-[#00291c] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-on-primary-container rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 text-[#00291c] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 text-[#00291c] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold text-primary">Alice Smith</p>
+<p class="text-xs text-on-surface-variant">Guest</p>
+</div>
+<div class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional portrait of a young woman with a warm smile, natural lighting, soft background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwOtuuftTM0UHn2sZQL-InaoylLcOO2L0JAiTweYneM-eY6Z3D8Nij33gPU1JvM08YCtrbdNMkZzG4XFYG6qrJTgXJWCmO7BCDKS4LHSbZkJUaGTW1oCNTYn3sattTAvYe2FRTOpYqlPLyiPaP3oIc730MNduiAv1srj7dU6G9ZbQRl_7yqw2ijyLOt7G6NxFe1CatgroIprvjpv-9_IyQ_N6poMmOqdTr1AV76UnCA6Ci1w6qCqZtMZPSaVWWuet57R_pJhrJWKY"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas Content -->
+<main class="flex-1 pt-24 px-8 pb-12 bg-surface">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Welcome Banner -->
+<div class="bg-surface-container-low rounded-DEFAULT border-l-4 border-on-primary-container p-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div class="relative z-10">
+<h2 class="text-[2.25rem] font-headline font-semibold text-primary leading-tight mb-2 tracking-tight">Good Morning, Alice.</h2>
+<p class="text-on-surface-variant font-body text-[0.875rem] max-w-xl leading-relaxed">Your stay at Grand Heritage is approaching. We are preparing Room 204 for your arrival and have noted your preference for feather pillows.</p>
+</div>
+<div class="relative z-10 flex gap-4">
+<button class="bg-gradient-to-b from-primary to-primary-container text-white px-6 py-2.5 rounded-DEFAULT font-medium text-sm hover:opacity-90 transition-opacity shadow-[0_4px_14px_0_rgba(0,41,28,0.2)]">
+                            Modify Stay
+                        </button>
+</div>
+<!-- Decorative subtle pattern/shape -->
+<div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-surface-variant/50 to-transparent pointer-events-none"></div>
+</div>
+<!-- Bento Grid Summary -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-6 relative overflow-hidden group hover:shadow-[0_24px_48px_-12px_rgba(28,28,23,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] font-medium">Active Reservations</h3>
+<span class="material-symbols-outlined text-secondary text-xl bg-secondary-fixed/50 p-2 rounded-full">luggage</span>
+</div>
+<p class="text-[2rem] font-headline font-semibold text-primary">1</p>
+<p class="text-[0.875rem] text-on-surface-variant mt-2">Deluxe Suite booked</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-6 relative overflow-hidden group hover:shadow-[0_24px_48px_-12px_rgba(28,28,23,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] font-medium">Account Balance</h3>
+<span class="material-symbols-outlined text-secondary text-xl bg-secondary-fixed/50 p-2 rounded-full">account_balance_wallet</span>
+</div>
+<p class="text-[2rem] font-headline font-semibold text-primary">$3,200.00</p>
+<p class="text-[0.875rem] text-on-surface-variant mt-2">Total settled</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-6 relative overflow-hidden group hover:shadow-[0_24px_48px_-12px_rgba(28,28,23,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] font-medium">Upcoming Check-in</h3>
+<span class="material-symbols-outlined text-secondary text-xl bg-secondary-fixed/50 p-2 rounded-full">event</span>
+</div>
+<p class="text-[1.75rem] font-headline font-semibold text-primary">Apr 22, 2026</p>
+<p class="text-[0.875rem] text-on-primary-container mt-2 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> In 14 days
+                        </p>
+</div>
+</div>
+<!-- Latest Reservation Detailed Card -->
+<div class="mt-12">
+<h3 class="text-[1.75rem] font-headline font-semibold text-primary mb-6">Latest Reservation</h3>
+<div class="bg-surface-container-lowest rounded-DEFAULT p-8 relative shadow-[0_24px_48px_-12px_rgba(28,28,23,0.06)] border border-outline-variant/10">
+<div class="flex flex-col lg:flex-row gap-8 justify-between">
+<!-- Left: Details -->
+<div class="flex-1 space-y-6">
+<div class="flex items-center justify-between border-b border-surface-variant pb-6">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h4 class="text-[1.25rem] font-headline font-semibold text-primary">Deluxe Suite</h4>
+<span class="bg-primary-fixed/20 text-on-primary-container px-3 py-0.5 rounded-full text-[0.75rem] font-bold tracking-wide uppercase flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                                                CONFIRMED
+                                            </span>
+</div>
+<p class="text-on-surface-variant text-[0.875rem]">Room 204 • Grand Heritage Hotel &amp; Spa</p>
+</div>
+<div class="text-right">
+<p class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] mb-1">Total</p>
+<p class="text-[1.5rem] font-headline font-semibold text-primary">$4,500.00</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8 pt-2">
+<div>
+<p class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] mb-2">Check-in</p>
+<p class="text-[1.125rem] font-medium text-primary">Apr 22, 2026</p>
+<p class="text-[0.875rem] text-on-surface-variant mt-1">3:00 PM</p>
+</div>
+<div>
+<p class="text-[0.75rem] font-label uppercase text-on-surface-variant tracking-[0.05em] mb-2">Check-out</p>
+<p class="text-[1.125rem] font-medium text-primary">Apr 27, 2026</p>
+<p class="text-[0.875rem] text-on-surface-variant mt-1">11:00 AM</p>
+</div>
+</div>
+<div class="pt-6 flex gap-4">
+<button class="bg-transparent border border-outline-variant/30 text-secondary px-6 py-2.5 rounded-DEFAULT font-medium text-sm hover:bg-surface-variant/50 transition-colors">
+                                        View Invoice
+                                    </button>
+<button class="bg-transparent text-error px-6 py-2.5 rounded-DEFAULT font-medium text-sm hover:bg-error-container/50 transition-colors">
+                                        Cancel Reservation
+                                    </button>
+</div>
+</div>
+<!-- Right: Image/Map Visual -->
+<div class="w-full lg:w-1/3 rounded-lg overflow-hidden relative h-64 lg:h-auto">
+<img alt="Room View" class="w-full h-full object-cover" data-alt="luxurious modern hotel bedroom interior with large windows, soft natural light, minimalist elegant decor, neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCauxQSTr4odC0jstbAcL9Z259DljrSt8WQniLnrtQ1nh06pQd_0D7GFyyi2ksWfndPtNRCwgXmnnW98wY2ui_nJDXYIOjuYjRJnVv39obnSq0iO4yko0ouz6CD5wcKq6mQe71mbIXShkd9sJd0--idtFoRGjuwTzCD1Ao2SX9DsDzoAwdtQ27vP5qs-xJmaOJMOLTl3QOtCiehoDWoODS0CnIEE2brYrt2J8aHUeTFASwn78CwWmDCNWAF5PVpgDv8oY8DukEDHjk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex items-end p-4">
+<p class="text-white font-medium text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">image</span>
+                                        Gallery
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

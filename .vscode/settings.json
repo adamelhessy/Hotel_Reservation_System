@@ -1,7 +1,14 @@
 {
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
+  "java.project.sourcePaths": ["src"],
+  "java.project.outputPath": "bin",
+  "java.project.referencedLibraries": [
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.web.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx-swt.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.graphics.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.fxml.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.swing.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.base.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.controls.jar",
+    "e:\\Coding\\Uni related project s\\Hotel Reservation System\\Project_Files\\lib\\javafx.media.jar"
+  ]
 }

@@ -13,8 +13,7 @@ import java.util.Random;
 import java.io.*; 
 import java.time.LocalDate;
 
-public class Database
-{
+public class Database {
     private static List<Guest> guests = new ArrayList<>();
     private static List<Room> rooms = new ArrayList<>();
     private static List<Reservation> reservations = new ArrayList<>();
@@ -133,22 +132,78 @@ public class Database
             scuba, kiteSurf, safari, spa, transfer, aquaPark, wifi, extraBed, babyСot, coffeeMachine, minibar, breakfastInBed, lateCheckout, earlyCheckin, airportPickup, romanticSetup,petFriendly, ironingBoard, safeBox));
 
         // 3. Generate Realistic Room Types
-        RoomType gardenView = new RoomType("Standard Garden Oasis", 2500.0, RoomView.GARDEN, "Comfortable room overlooking the lush resort gardens and palm trees.", 1.0, 2500.0, 2);
-        RoomType poolView = new RoomType("Deluxe Pool View", 3500.0, RoomView.POOL, "Spacious room with a balcony directly facing the main heated pool.", 1.1, 3181.8, 3);
-        RoomType seaView = new RoomType("Red Sea Premium", 4800.0, RoomView.SEA_VIEW, "Stunning panoramic views of the Red Sea crystal clear waters.", 1.3, 3692.3, 3);
-        RoomType royalSuite = new RoomType("Hurghada Royal Suite", 12000.0, RoomView.SEA_VIEW, "Luxurious top-floor suite with a private jacuzzi overlooking the sea.", 1.5, 8000.0, 5);
+        // 1. Budget/Standard Tier
+        RoomType standardGarden = new RoomType(
+            "Standard Garden Oasis", 2200.0, RoomView.GARDEN, 
+            "A cozy, cost-effective room with a private terrace opening to the resort's botanical gardens.", 
+            1.0, 2200.0, 2
+        );
 
-        Database.getRoomTypes().addAll(Arrays.asList(gardenView, poolView, seaView, royalSuite));
+        RoomType superiorPool = new RoomType(
+            "Superior Pool View", 3200.0, RoomView.POOL, 
+            "Modernly furnished room featuring a shaded balcony right above the heated infinity pool.", 
+            1.0, 3200.0, 3
+        );
 
-            // 4. Generate 50 Rooms (5 Floors, 10 Rooms per floor)
+        // 2. Family & Group Tier
+        RoomType familyAqua = new RoomType(
+            "Family Aqua Chalet", 4800.0, RoomView.POOL, 
+            "Spacious ground-floor room located steps away from the water slides, ideal for families with children.", 
+            1.0, 4800.0, 4
+        );
+
+        RoomType connectedGardenFamily = new RoomType(
+            "Connected Garden Family Suite", 5500.0, RoomView.GARDEN, 
+            "Two interconnected standard rooms offering privacy for parents while keeping the kids close.", 
+            1.1, 5000.0, 5
+        );
+
+        // 3. Premium Sea View Tier
+        RoomType redSeaPanoramic = new RoomType(
+            "Red Sea Panoramic Room", 5800.0, RoomView.SEA_VIEW, 
+            "Elevated room on the top floor offering sweeping 180-degree views of the Red Sea's turquoise waters.", 
+            1.2, 4833.3, 3
+        );
+
+        RoomType honeymoonSuite = new RoomType(
+            "Honeymoon Sea Suite", 8500.0, RoomView.SEA_VIEW, 
+            "Romantic suite tailored for couples, featuring a four-poster bed, rose-petal setup, and sea-facing balcony.", 
+            1.3, 6538.4, 2
+        );
+
+        // 4. Ultra-Luxury Tier
+        RoomType presidentialSuite = new RoomType(
+            "Hurghada Presidential Suite", 14000.0, RoomView.SEA_VIEW, 
+            "A sprawling two-bedroom suite with a private jacuzzi, lounge area, and dedicated butler service.", 
+            1.4, 10000.0, 6
+        );
+
+        RoomType diversLodge = new RoomType(
+            "Scuba Diver's Premium Lodge", 6500.0, RoomView.SEA_VIEW, 
+            "Located near the resort's private marina, offering extra gear storage and early breakfast access for morning dives.", 
+            1.1, 5909.0, 3
+        );
+
+        // UPDATED: Adding the newly defined room types to the database
+        Database.getRoomTypes().addAll(Arrays.asList(
+            standardGarden, superiorPool, familyAqua, connectedGardenFamily, 
+            redSeaPanoramic, honeymoonSuite, presidentialSuite, diversLodge
+        ));
+
+        // 4. Generate 50 Rooms (5 Floors, 10 Rooms per floor)
         for (int floor = 1; floor <= 5; floor++) {
             for (int r = 1; r <= 10; r++) {
                 int roomNumber = (floor * 100) + r;
                 RoomType type;
-                if (r <= 4)      type = gardenView;
-                else if (r <= 7) type = poolView;
-                else if (r <= 9) type = seaView;
-                else             type = royalSuite;
+
+                // UPDATED: Distributing the 8 new room types
+                if (r <= 3) type = standardGarden;
+                else if (r <= 5) type = superiorPool;
+                else if (r == 6) type = familyAqua;
+                else if (r == 7) type = connectedGardenFamily;
+                else if (r == 8) type = redSeaPanoramic;
+                else if (r == 9) type = (floor >= 4) ? honeymoonSuite : diversLodge;
+                else type = (floor == 5) ? presidentialSuite : redSeaPanoramic;
 
                 Room room = new Room(roomNumber, floor, type);
 
@@ -156,8 +211,8 @@ public class Database
                 room.addAmenity(wifi);
                 room.addAmenity(safeBox);
 
-                // --- ROYAL SUITE --- full luxury package
-                if (type == royalSuite) {
+                // --- ULTRA-LUXURY (Presidential & Honeymoon) ---
+                if (type == presidentialSuite || type == honeymoonSuite) {
                     room.addAmenity(spa);
                     room.addAmenity(transfer);
                     room.addAmenity(aquaPark);
@@ -170,11 +225,12 @@ public class Database
                     if (rand.nextBoolean()) room.addAmenity(extraBed);
                 }
 
-                // --- RED SEA PREMIUM (sea view) ---
-                else if (type == seaView) {
+                // --- PREMIUM SEA VIEW & DIVERS LODGE ---
+                else if (type == redSeaPanoramic || type == diversLodge) {
                     room.addAmenity(aquaPark);
                     room.addAmenity(coffeeMachine);
                     room.addAmenity(minibar);
+                    if (type == diversLodge) room.addAmenity(scuba); // Divers specific
                     if (rand.nextBoolean()) room.addAmenity(spa);
                     if (rand.nextBoolean()) room.addAmenity(breakfastInBed);
                     if (rand.nextBoolean()) room.addAmenity(lateCheckout);
@@ -182,8 +238,17 @@ public class Database
                     if (rand.nextDouble() > 0.7) room.addAmenity(extraBed);
                 }
 
+                // --- FAMILY TIER ---
+                else if (type == familyAqua || type == connectedGardenFamily) {
+                    room.addAmenity(aquaPark);
+                    room.addAmenity(babyСot);
+                    room.addAmenity(extraBed);
+                    room.addAmenity(coffeeMachine);
+                    if (rand.nextBoolean()) room.addAmenity(minibar);
+                }
+
                 // --- DELUXE POOL VIEW ---
-                else if (type == poolView) {
+                else if (type == superiorPool) {
                     room.addAmenity(aquaPark);
                     room.addAmenity(coffeeMachine);
                     if (rand.nextBoolean()) room.addAmenity(minibar);
@@ -204,7 +269,7 @@ public class Database
                 }
 
                 // --- FAMILY TOUCHES (floors 3-5 skew family-friendly) ---
-                if (floor >= 3) {
+                if (floor >= 3 && type != presidentialSuite && type != honeymoonSuite) {
                     if (rand.nextDouble() > 0.6) room.addAmenity(babyСot);
                     if (rand.nextDouble() > 0.7) room.addAmenity(petFriendly);
                 }

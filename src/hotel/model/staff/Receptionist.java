@@ -2,12 +2,11 @@ package hotel.model.staff;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 import hotel.core.Database;
 import hotel.model.entities.Review;
-import hotel.model.enums.AccountStatus;
-import hotel.model.enums.Gender;
-import hotel.model.enums.ReservationStatus;
-import hotel.model.enums.UserType;
+import hotel.model.enums.*;
 import hotel.model.bookings.Invoice;
 import hotel.model.bookings.Reservation;
 
@@ -31,21 +30,53 @@ public class Receptionist extends Staff {
     public void addDraftReservation(Reservation reservation) {
         this.draftReservations.add(reservation);
     }
-        
-    public void manageCheckIn(int reservationID) 
+    public void manageCheckIn(int reservationID, Scanner sc)
     {
         List<Reservation> reservations = Database.getReservations();
+        List<Invoice> invoiceList = Database.getInvoices();
         for (Reservation res : reservations) {
-            if (res.getReservationID() == reservationID) 
+            if (res.getReservationID() == reservationID)
             {
-                if (res.getStatus() != ReservationStatus.PENDING) 
-                {
+                if (res.getStatus() != ReservationStatus.PENDING) {
                     System.out.println("Check-in failed: Reservation is " + res.getStatus() + ", not PENDING.");
                     return;
                 }
-                res.confirmreservation();
-                Database.saveData();
-                System.out.println("Reservation #" + reservationID + " confirmed. Guest checked in.");
+                for(int j=0;j<Database.getInvoices().size();j++) {
+                    if (invoiceList.get(j).getReservation().getReservationID() == reservationID) {
+                        if (invoiceList.get(j).getPaymentMethod() == PaymentMethod.CASH) {
+                            System.out.println(invoiceList.get(j).getTotalAmount() + " $ must be payed cash");
+                            System.out.println("1.confirm ,2. cancel reservation");
+                            int choice= sc.nextInt();
+                            while(choice !=1 && choice!=2){
+                                System.out.println("Invalid input ,please try again");
+                                choice=sc.nextInt();
+                            }
+                            if(choice ==2){
+                                res.setStatus(ReservationStatus.CANCELLED);
+                                Database.saveData();
+                                return;
+                            }else{
+                                res.confirmreservation();
+                                Database.saveData();
+                                System.out.println("Reservation #" + reservationID + " confirmed. Guest checked in.");
+                                return;
+
+
+                            }
+
+                        }else if (!invoiceList.get(j).isPaid()) {
+                        System.out.println("No amount of money is paid, reservation will be cancelled");
+                        res.setStatus(ReservationStatus.CANCELLED);
+                        return;
+                        }else{
+                            res.confirmreservation();
+                            Database.saveData();
+                            System.out.println("Reservation #" + reservationID + " confirmed. Guest checked in.");
+                            return;
+                        }
+                    }
+                }
+                System.out.println("This reservation doesn't has an invoice");
                 return;
             }
         }

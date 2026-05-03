@@ -1,0 +1,115 @@
+/* Typography & Base */
+* {
+  -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Base Canvas & No-Line Rule styling */
+.root {
+  -fx-background-color: #fcf9f1;
+}
+
+/* Card & Ambient Shadow */
+.card {
+  -fx-background-color: #ffffff;
+  -fx-background-radius: 4px;
+  -fx-effect: dropshadow(gaussian, rgba(28, 28, 23, 0.06), 24, 0, 0, 4);
+}
+
+.input-flat {
+  -fx-background-color: #eae8e0;
+  -fx-border-color: transparent transparent rgba(195, 198, 207, 0.3) transparent;
+  -fx-border-width: 0 0 2px 0;
+  -fx-padding: 12 16 12 16; /* Adds nice breathing room */
+}
+.input-flat:focused-within {
+  -fx-border-color: transparent transparent #3fb68b transparent; /* Teal on focus */
+}
+.input-flat-field,
+.input-flat-field:focused {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-prompt-text-fill: #43474e;
+  -fx-text-fill: #1c1c17;
+}
+
+/* Primary Navy Button */
+.btn-primary {
+  -fx-background-color: linear-gradient(to right, #00291c, #00412e);
+  -fx-text-fill: #ffffff;
+  -fx-background-radius: 4px;
+  -fx-cursor: hand;
+  -fx-font-weight: bold;
+}
+.btn-primary:hover {
+  -fx-opacity: 0.9;
+}
+
+/* Role Selector Tabs */
+.role-tab {
+  -fx-background-color: transparent;
+  -fx-text-fill: #43474e;
+  -fx-background-radius: 8px;
+  -fx-cursor: hand;
+}
+.role-tab-active {
+  -fx-background-color: #ffffff;
+  -fx-text-fill: #00291c;
+  -fx-font-weight: bold;
+  -fx-effect: dropshadow(gaussian, rgba(28, 28, 23, 0.06), 12, 0, 0, 2);
+}
+
+.display-sm {
+  -fx-font-size: 20px;
+  -fx-font-weight: 700;
+  -fx-text-fill: #00291c;
+}
+
+.login-left-panel {
+  -fx-background-color: #00291c;
+  -fx-background-image: url("../assets/lobby-pic.jpg");
+  -fx-background-size: cover;
+  -fx-background-position: center center;
+}
+
+.overlay-tint {
+  -fx-background-color: rgba(0, 41, 28, 0.85);
+}
+
+.sidebar {
+  -fx-background-color: #00291c;
+  -fx-pref-width: 220px;
+  -fx-min-width: 220px;
+  -fx-max-width: 220px;
+}
+
+.top-bar {
+  -fx-background-color: #f6f4eb;
+  -fx-pref-height: 64px;
+  -fx-min-height: 64px;
+  -fx-max-height: 64px;
+  -fx-padding: 0 32 0 32;
+}
+
+/* Inactive State */
+.sidebar-nav-item {
+  -fx-background-color: transparent;
+  -fx-text-fill: #8ba1b5;
+  -fx-padding: 12 16;
+  -fx-cursor: hand;
+  -fx-font-family: "Inter", "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-alignment: CENTER_LEFT;
+}
+
+/* Active State */
+.sidebar-nav-item-active {
+  -fx-background-color: rgba(255, 255, 255, 0.07);
+  -fx-text-fill: #ffffff;
+  -fx-padding: 12 16;
+  -fx-cursor: hand;
+  -fx-font-family: "Inter", "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-alignment: CENTER_LEFT;
+  -fx-border-color: transparent transparent transparent #3fb68b;
+  -fx-border-width: 0 0 0 4;
+}

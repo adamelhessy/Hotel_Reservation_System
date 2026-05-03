@@ -96,25 +96,38 @@ public class Invoice implements Payable , Serializable
 
     @Override
     public double getTotal() {
-        return totalAmount; 
+        return totalAmount;
     }
 
     @Override
-    public void pay(Guest guest, PaymentMethod method)
-    {
-        if (guest.getBalance() >= getTotal()) 
-        {
-            guest.setBalance(guest.getBalance() - getTotal());
-            this.isPaid = true;
+    public void pay(Guest guest, PaymentMethod method) {
+        if (method != PaymentMethod.CASH) {
+            if (guest.getBalance() >= getTotal()) {
+                guest.setBalance(guest.getBalance() - getTotal());
+                this.isPaid = true;
+                this.paymentMethod = method;
+                this.paymentDate = LocalDate.now();
+                System.out.println("Payment successful.");
+            } else {
+                System.out.println("Insufficient guest balance.");
+            }
+        }else {
+            System.out.println("You can pay your invoice at check in ");
+            this.isPaid = false;
             this.paymentMethod = method;
-            this.paymentDate = LocalDate.now();
-            System.out.println("Payment successful.");
-        } 
-        else 
-        {
-            System.out.println("Insufficient guest balance.");
+            this.paymentDate = reservation.getCheckinDate();
+
         }
+
+
+
     }
+
+
+
+
+
+
 
     public String generateItemizedSummary() {
         if (this.reservation == null) {
@@ -145,10 +158,10 @@ public class Invoice implements Payable , Serializable
             }
         }
 
-        if (this.discountAmount > 0 && this.appliedPromoCode != null) 
+        if (this.discountAmount > 0 && this.appliedPromoCode != null)
         {
             summary.append(String.format("Promo Discount (%s): -$%.2f\n",
-            appliedPromoCode, this.discountAmount));
+                    appliedPromoCode, this.discountAmount));
         }
 
         summary.append("------------------------------------------\n");

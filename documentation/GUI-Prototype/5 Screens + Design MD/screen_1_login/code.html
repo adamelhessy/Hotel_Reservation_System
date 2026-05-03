@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Grand Azure Hotel - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#002115",
+                        "on-secondary-fixed": "#001c38",
+                        "primary": "#00291c",
+                        "on-secondary-fixed-variant": "#2b486b",
+                        "on-secondary-container": "#3f5b7f",
+                        "on-tertiary-fixed-variant": "#673d00",
+                        "surface-tint": "#006c4e",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#31312b",
+                        "outline": "#73777f",
+                        "outline-variant": "#c3c6cf",
+                        "surface": "#fcf9f1",
+                        "on-tertiary-fixed": "#2b1700",
+                        "secondary-fixed-dim": "#abc9f2",
+                        "tertiary-container": "#543000",
+                        "surface-bright": "#fcf9f1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#dcdad2",
+                        "surface-container-high": "#eae8e0",
+                        "on-surface": "#1c1c17",
+                        "surface-container": "#f0eee5",
+                        "secondary": "#436084",
+                        "surface-variant": "#e5e2da",
+                        "surface-container-low": "#f6f4eb",
+                        "secondary-fixed": "#d2e4ff",
+                        "tertiary-fixed": "#ffdcbb",
+                        "inverse-primary": "#68dbae",
+                        "primary-fixed-dim": "#68dbae",
+                        "secondary-container": "#b6d4fe",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#3fb68b",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-container": "#00412e",
+                        "background": "#fcf9f1",
+                        "inverse-on-surface": "#f3f1e8",
+                        "tertiary": "#361d00",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e5e2da",
+                        "on-surface-variant": "#43474e",
+                        "on-tertiary-container": "#dd9235",
+                        "primary-fixed": "#86f8c9",
+                        "on-primary-fixed-variant": "#00513a",
+                        "on-background": "#1c1c17",
+                        "tertiary-fixed-dim": "#ffb869",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface h-screen w-full overflow-hidden flex flex-col md:flex-row">
+<!-- Left Half: Brand & Depth (Hide on mobile) -->
+<div class="hidden md:flex w-1/2 bg-primary flex-col justify-center items-center p-12 relative overflow-hidden">
+<!-- Decorative Background Layer -->
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%);"></div>
+<img alt="Luxury Hotel Lobby" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30" data-alt="grand luxury hotel lobby with warm lighting marble floors and modern elegant furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwgjKz0spdsbeG9p4qXiw1Ev80X-LGd_qvvh7ub59wH_QD8qwtldJBBVeOfrXEH-pAPoLLm2o7HUGMLY9heTPPdmZe8t83y1pCSlGyArNq2M8AV_Lo7xv1vnzH5XCFJwQaRjC3y9iSCFQU7CRwhwcg9_-fWlRz12-eYNwv1-s6NnlGMY5SmQgEOxSaFgAJ5XhNzgROUXG1wMTBJF-L9hwAlqBqO9r0glrDWmWqqcP4HsWZYtyWVVDQL4JjWxgnU4xAb61oco0EnoU"/>
+<div class="relative z-10 text-center space-y-6 max-w-lg">
+<h1 class="font-headline text-5xl md:text-6xl font-black text-on-primary tracking-tighter">Grand Azure Hotel</h1>
+<p class="font-body text-xl text-secondary-fixed-dim tracking-wide font-light">Your comfort is our priority.</p>
+</div>
+<!-- Screen Label as requested -->
+<div class="absolute top-6 left-6 z-20">
+<span class="font-label text-xs uppercase tracking-widest text-on-primary/60">Screen 1 — Login</span>
+</div>
+</div>
+<!-- Right Half: Action Area (White Surface Container Lowest) -->
+<div class="w-full md:w-1/2 bg-surface-container-lowest flex flex-col justify-center items-center p-6 sm:p-12 h-full overflow-y-auto">
+<!-- Mobile Header (Visible only on mobile) -->
+<div class="md:hidden w-full text-center mb-8 mt-4">
+<h1 class="font-headline text-3xl font-black text-primary tracking-tighter">Grand Azure Hotel</h1>
+<p class="font-body text-sm text-on-surface-variant mt-2">Your comfort is our priority.</p>
+</div>
+<div class="w-full max-w-[400px] space-y-8">
+<!-- Login Header -->
+<div class="space-y-2">
+<h2 class="font-headline text-3xl font-bold text-on-surface tracking-tight">Welcome Back</h2>
+<p class="font-body text-base text-on-surface-variant">Sign in to continue</p>
+</div>
+<!-- Role Selector Tabs -->
+<div class="bg-surface-container-low p-1 rounded-lg flex space-x-1 mb-8 shadow-sm">
+<button class="flex-1 py-2.5 text-sm font-label font-semibold text-on-surface bg-surface-container-lowest rounded shadow-sm transition-all">Guest</button>
+<button class="flex-1 py-2.5 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition-all">Receptionist</button>
+<button class="flex-1 py-2.5 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition-all">Admin</button>
+</div>
+<!-- Login Form -->
+<form class="space-y-6">
+<div class="space-y-4">
+<!-- Username Field -->
+<div class="relative">
+<label class="sr-only" for="username">Username</label>
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">person</span>
+</div>
+<input class="w-full pl-11 pr-4 py-3 bg-surface-container-high border-0 border-b-2 border-outline-variant/30 text-on-surface font-body text-base focus:ring-0 focus:border-on-primary-container transition-colors rounded-t-DEFAULT outline-none placeholder-on-surface-variant/70" id="username" name="username" placeholder="Username or Email" type="text"/>
+</div>
+<!-- Password Field -->
+<div class="relative">
+<label class="sr-only" for="password">Password</label>
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">lock</span>
+</div>
+<input class="w-full pl-11 pr-12 py-3 bg-surface-container-high border-0 border-b-2 border-outline-variant/30 text-on-surface font-body text-base focus:ring-0 focus:border-on-primary-container transition-colors rounded-t-DEFAULT outline-none placeholder-on-surface-variant/70" id="password" name="password" placeholder="Password" type="password"/>
+<div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</div>
+</div>
+</div>
+<!-- Forgot Password -->
+<div class="flex items-center justify-end">
+<a class="font-label text-sm font-medium text-on-primary-container hover:text-primary transition-colors" href="#">Forgot Password?</a>
+</div>
+<!-- Sign In Button -->
+<button class="w-full py-3.5 bg-gradient-to-b from-primary to-primary-container text-on-primary font-label font-bold text-base rounded-DEFAULT hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center space-x-2" type="submit">
+<span>Sign In</span>
+<span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</form>
+</div>
+</div>
+</body></html>
