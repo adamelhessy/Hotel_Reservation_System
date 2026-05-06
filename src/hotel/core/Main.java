@@ -31,15 +31,11 @@ public class Main extends Application {
     }
 
     @Override
-    public void start (Stage primaryStage) throws Exception
-    {
-       primaryStage.setTitle("Grand Azure Hotel - Digital Concierge");
-        // Give the SceneManager control of the main window
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Grand Azure Hotel - Digital Concierge");
         SceneManager.setPrimaryStage(primaryStage);
-        // LOADD Login Screen firstt
-        SceneManager.navigate("login-page.fxml"); 
+        SceneManager.navigate("login-page.fxml");
     }
-
 
 
 

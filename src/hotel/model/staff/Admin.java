@@ -101,7 +101,8 @@ public class  Admin extends Staff implements Manageable
         {
             if (roomList.get(i).getRoomNumber() == roomNumber)
             {
-                for (Reservation res : allReservations) {
+                for (Reservation res : allReservations)
+                {
                     if (res.getRoom().getRoomNumber() == roomNumber &&
                             (res.getStatus() == ReservationStatus.CONFIRMED || res.getStatus() == ReservationStatus.PENDING)) {
                         throw new Exception("Delete Failed: Room " + roomNumber + " has an active reservation.");

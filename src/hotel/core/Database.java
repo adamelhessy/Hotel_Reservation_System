@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.io.*; 
+import java.io.*;
 import java.time.LocalDate;
 
 public class Database {
@@ -127,67 +127,62 @@ public class Database {
         Amenity petFriendly     = new Amenity("Pet-Friendly Package","Extra cleaning service and a pet welcome kit",               450.0);
         Amenity ironingBoard    = new Amenity("Ironing Board & Iron","Full-size board with steam iron delivered on request",        100.0);
         Amenity safeBox         = new Amenity("In-Room Safe Box",    "Programmable digital safe for valuables",                     80.0);
-                
+
         Database.getAmenities().addAll(Arrays.asList(
-            scuba, kiteSurf, safari, spa, transfer, aquaPark, wifi, extraBed, babyСot, coffeeMachine, minibar, breakfastInBed, lateCheckout, earlyCheckin, airportPickup, romanticSetup,petFriendly, ironingBoard, safeBox));
+                scuba, kiteSurf, safari, spa, transfer, aquaPark, wifi, extraBed, babyСot, coffeeMachine, minibar, breakfastInBed, lateCheckout, earlyCheckin, airportPickup, romanticSetup,petFriendly, ironingBoard, safeBox));
 
         // 3. Generate Realistic Room Types
-        // 1. Budget/Standard Tier
         RoomType standardGarden = new RoomType(
-            "Standard Garden Oasis", 2200.0, RoomView.GARDEN, 
-            "A cozy, cost-effective room with a private terrace opening to the resort's botanical gardens.", 
-            1.0, 2200.0, 2
+                "Standard Garden Oasis", 2200.0, RoomView.GARDEN,
+                "A cozy, cost-effective room with a private terrace opening to the resort's botanical gardens.",
+                1.0, 2200.0, 2
         );
 
         RoomType superiorPool = new RoomType(
-            "Superior Pool View", 3200.0, RoomView.POOL, 
-            "Modernly furnished room featuring a shaded balcony right above the heated infinity pool.", 
-            1.0, 3200.0, 3
+                "Superior Pool View", 3200.0, RoomView.POOL,
+                "Modernly furnished room featuring a shaded balcony right above the heated infinity pool.",
+                1.0, 3200.0, 3
         );
 
-        // 2. Family & Group Tier
         RoomType familyAqua = new RoomType(
-            "Family Aqua Chalet", 4800.0, RoomView.POOL, 
-            "Spacious ground-floor room located steps away from the water slides, ideal for families with children.", 
-            1.0, 4800.0, 4
+                "Family Aqua Chalet", 4800.0, RoomView.POOL,
+                "Spacious ground-floor room located steps away from the water slides, ideal for families with children.",
+                1.0, 4800.0, 4
         );
 
         RoomType connectedGardenFamily = new RoomType(
-            "Connected Garden Family Suite", 5500.0, RoomView.GARDEN, 
-            "Two interconnected standard rooms offering privacy for parents while keeping the kids close.", 
-            1.1, 5000.0, 5
+                "Connected Garden Family Suite", 5500.0, RoomView.GARDEN,
+                "Two interconnected standard rooms offering privacy for parents while keeping the kids close.",
+                1.1, 5000.0, 5
         );
 
-        // 3. Premium Sea View Tier
         RoomType redSeaPanoramic = new RoomType(
-            "Red Sea Panoramic Room", 5800.0, RoomView.SEA_VIEW, 
-            "Elevated room on the top floor offering sweeping 180-degree views of the Red Sea's turquoise waters.", 
-            1.2, 4833.3, 3
+                "Red Sea Panoramic Room", 5800.0, RoomView.SEA_VIEW,
+                "Elevated room on the top floor offering sweeping 180-degree views of the Red Sea's turquoise waters.",
+                1.2, 4833.3, 3
         );
 
         RoomType honeymoonSuite = new RoomType(
-            "Honeymoon Sea Suite", 8500.0, RoomView.SEA_VIEW, 
-            "Romantic suite tailored for couples, featuring a four-poster bed, rose-petal setup, and sea-facing balcony.", 
-            1.3, 6538.4, 2
+                "Honeymoon Sea Suite", 8500.0, RoomView.SEA_VIEW,
+                "Romantic suite tailored for couples, featuring a four-poster bed, rose-petal setup, and sea-facing balcony.",
+                1.3, 6538.4, 2
         );
 
-        // 4. Ultra-Luxury Tier
         RoomType presidentialSuite = new RoomType(
-            "Hurghada Presidential Suite", 14000.0, RoomView.SEA_VIEW, 
-            "A sprawling two-bedroom suite with a private jacuzzi, lounge area, and dedicated butler service.", 
-            1.4, 10000.0, 6
+                "Hurghada Presidential Suite", 14000.0, RoomView.SEA_VIEW,
+                "A sprawling two-bedroom suite with a private jacuzzi, lounge area, and dedicated butler service.",
+                1.4, 10000.0, 6
         );
 
         RoomType diversLodge = new RoomType(
-            "Scuba Diver's Premium Lodge", 6500.0, RoomView.SEA_VIEW, 
-            "Located near the resort's private marina, offering extra gear storage and early breakfast access for morning dives.", 
-            1.1, 5909.0, 3
+                "Scuba Diver's Premium Lodge", 6500.0, RoomView.SEA_VIEW,
+                "Located near the resort's private marina, offering extra gear storage and early breakfast access for morning dives.",
+                1.1, 5909.0, 3
         );
 
-        // UPDATED: Adding the newly defined room types to the database
         Database.getRoomTypes().addAll(Arrays.asList(
-            standardGarden, superiorPool, familyAqua, connectedGardenFamily, 
-            redSeaPanoramic, honeymoonSuite, presidentialSuite, diversLodge
+                standardGarden, superiorPool, familyAqua, connectedGardenFamily,
+                redSeaPanoramic, honeymoonSuite, presidentialSuite, diversLodge
         ));
 
         // 4. Generate 50 Rooms (5 Floors, 10 Rooms per floor)
@@ -196,7 +191,6 @@ public class Database {
                 int roomNumber = (floor * 100) + r;
                 RoomType type;
 
-                // UPDATED: Distributing the 8 new room types
                 if (r <= 3) type = standardGarden;
                 else if (r <= 5) type = superiorPool;
                 else if (r == 6) type = familyAqua;
@@ -207,11 +201,9 @@ public class Database {
 
                 Room room = new Room(roomNumber, floor, type);
 
-                // --- UNIVERSAL (every room gets these) ---
                 room.addAmenity(wifi);
                 room.addAmenity(safeBox);
 
-                // --- ULTRA-LUXURY (Presidential & Honeymoon) ---
                 if (type == presidentialSuite || type == honeymoonSuite) {
                     room.addAmenity(spa);
                     room.addAmenity(transfer);
@@ -224,21 +216,17 @@ public class Database {
                     room.addAmenity(earlyCheckin);
                     if (rand.nextBoolean()) room.addAmenity(extraBed);
                 }
-
-                // --- PREMIUM SEA VIEW & DIVERS LODGE ---
                 else if (type == redSeaPanoramic || type == diversLodge) {
                     room.addAmenity(aquaPark);
                     room.addAmenity(coffeeMachine);
                     room.addAmenity(minibar);
-                    if (type == diversLodge) room.addAmenity(scuba); // Divers specific
+                    if (type == diversLodge) room.addAmenity(scuba);
                     if (rand.nextBoolean()) room.addAmenity(spa);
                     if (rand.nextBoolean()) room.addAmenity(breakfastInBed);
                     if (rand.nextBoolean()) room.addAmenity(lateCheckout);
                     if (rand.nextDouble() > 0.6) room.addAmenity(romanticSetup);
                     if (rand.nextDouble() > 0.7) room.addAmenity(extraBed);
                 }
-
-                // --- FAMILY TIER ---
                 else if (type == familyAqua || type == connectedGardenFamily) {
                     room.addAmenity(aquaPark);
                     room.addAmenity(babyСot);
@@ -246,8 +234,6 @@ public class Database {
                     room.addAmenity(coffeeMachine);
                     if (rand.nextBoolean()) room.addAmenity(minibar);
                 }
-
-                // --- DELUXE POOL VIEW ---
                 else if (type == superiorPool) {
                     room.addAmenity(aquaPark);
                     room.addAmenity(coffeeMachine);
@@ -257,8 +243,6 @@ public class Database {
                     if (rand.nextDouble() > 0.7) room.addAmenity(lateCheckout);
                     if (rand.nextDouble() > 0.8) room.addAmenity(breakfastInBed);
                 }
-
-                // --- STANDARD GARDEN OASIS ---
                 else {
                     if (rand.nextBoolean()) room.addAmenity(coffeeMachine);
                     if (rand.nextBoolean()) room.addAmenity(extraBed);
@@ -268,13 +252,11 @@ public class Database {
                     if (rand.nextDouble() > 0.8) room.addAmenity(minibar);
                 }
 
-                // --- FAMILY TOUCHES (floors 3-5 skew family-friendly) ---
                 if (floor >= 3 && type != presidentialSuite && type != honeymoonSuite) {
                     if (rand.nextDouble() > 0.6) room.addAmenity(babyСot);
                     if (rand.nextDouble() > 0.7) room.addAmenity(petFriendly);
                 }
 
-                // --- BUSINESS TOUCHES (floor 1-2 skew solo/business travellers) ---
                 if (floor <= 2) {
                     if (rand.nextDouble() > 0.6) room.addAmenity(ironingBoard);
                     if (rand.nextDouble() > 0.7) room.addAmenity(airportPickup);
@@ -286,30 +268,30 @@ public class Database {
 
         // 5. Generate Realistic Reviews (20 reviews)
         String[] reviewTexts = {
-            "The coral reefs right off the hotel beach are unbelievable!",
-            "Great stay, but the WiFi on the beach was a bit weak.",
-            "Loved the Aqua Park! The kids had an amazing time.",
-            "The sea view from the balcony made the entire trip worth it.",
-            "Kitesurfing instructors were very professional.",
-            "Food at the open buffet was excellent, lots of variety.",
-            "Perfect weather and the heated pool was a nice touch.",
-            "The desert quad safari booked through the hotel was thrilling!",
-            "Room was spotless. Housekeeping does a fantastic job.",
-            "The Bedouin tea during the safari was delicious.",
-            "A bit crowded near the main pool, but the beach was quiet.",
-            "The Red Sea Spa massage really helped me relax.",
-            "Absolutely beautiful resort. We will be back next year!",
-            "Great value for money. The All-Inclusive package is totally worth it.",
-            "The scuba diving excursion changed my life. Beautiful marine life.",
-            "Front desk staff were very welcoming and helpful.",
-            "Loved waking up to the sunrise over the Red Sea.",
-            "Drinks at the beach bar were fantastic.",
-            "Could have more vegetarian options at dinner, but overall good.",
-            "Our royal suite was beyond luxurious. Perfect honeymoon destination!"
+                "The coral reefs right off the hotel beach are unbelievable!",
+                "Great stay, but the WiFi on the beach was a bit weak.",
+                "Loved the Aqua Park! The kids had an amazing time.",
+                "The sea view from the balcony made the entire trip worth it.",
+                "Kitesurfing instructors were very professional.",
+                "Food at the open buffet was excellent, lots of variety.",
+                "Perfect weather and the heated pool was a nice touch.",
+                "The desert quad safari booked through the hotel was thrilling!",
+                "Room was spotless. Housekeeping does a fantastic job.",
+                "The Bedouin tea during the safari was delicious.",
+                "A bit crowded near the main pool, but the beach was quiet.",
+                "The Red Sea Spa massage really helped me relax.",
+                "Absolutely beautiful resort. We will be back next year!",
+                "Great value for money. The All-Inclusive package is totally worth it.",
+                "The scuba diving excursion changed my life. Beautiful marine life.",
+                "Front desk staff were very welcoming and helpful.",
+                "Loved waking up to the sunrise over the Red Sea.",
+                "Drinks at the beach bar were fantastic.",
+                "Could have more vegetarian options at dinner, but overall good.",
+                "Our royal suite was beyond luxurious. Perfect honeymoon destination!"
         };
 
         for (int i = 0; i < 20; i++) {
-            Review review = new Review((rand.nextInt(3) + 3), reviewTexts[i]); // Scores between 3 and 5
+            Review review = new Review((rand.nextInt(3) + 3), reviewTexts[i]);
             Room randomRoom = Database.getRooms().get(rand.nextInt(Database.getRooms().size()));
             randomRoom.addReview(review);
         }
@@ -332,7 +314,7 @@ public class Database {
             String phone = "+201" + (rand.nextInt(3)) + String.format("%08d", rand.nextInt(100000000));
             String city = cities[rand.nextInt(cities.length)];
             LocalDate dob = LocalDate.of(1960 + rand.nextInt(40), 1 + rand.nextInt(12), 1 + rand.nextInt(28));
-            
+
             Guest guest = new Guest();
             guest.setUserName(username);
             guest.setPassword("Guest@123");
@@ -342,9 +324,9 @@ public class Database {
             guest.setDateOfbirth(dob);
             guest.setPhoneNumber(phone);
             guest.setAddress(city);
-            guest.setBalance(20000.0 + (rand.nextDouble() * 80000)); // Balance between 20k and 100k
+            guest.setBalance(20000.0 + (rand.nextDouble() * 80000));
             guest.setUniqueId(guestIdCounter++);
-            
+
             // Hardcode one for easy testing
             if (i == 0) {
                 guest.setUserName("guest_test");
@@ -352,6 +334,20 @@ public class Database {
             }
             Database.getGuests().add(guest);
         }
+
+        // 7b. Add dedicated test guest: Adam
+        Guest adam = new Guest();
+        adam.setUserName("adam");
+        adam.setPassword("Adam@123");
+        adam.setTypeofuser(UserType.GUEST);
+        adam.setTheGender(Gender.MALE);
+        adam.setAccountStatus(AccountStatus.ACTIVE);
+        adam.setDateOfbirth(LocalDate.of(1995, 6, 15));
+        adam.setPhoneNumber("+20100000001");
+        adam.setAddress("Cairo, Egypt");
+        adam.setBalance(50000.0);
+        adam.setUniqueId(guestIdCounter++);
+        Database.getGuests().add(adam);
 
         // 8. Generate 3 Admins & 3 Receptionists
         Admin a1 = new Admin(); a1.setUserName("admin_ahmed"); a1.setPassword("Admin@2026"); a1.setTypeofuser(UserType.ADMIN); a1.setAccountStatus(AccountStatus.ACTIVE);
@@ -367,27 +363,23 @@ public class Database {
         // 9. Generate 50 Reservations & 50 Invoices
         BookingEngine engine = new BookingEngine();
         int resId = 1;
-        
+
         for (int i = 0; i < 50; i++) {
             Guest guest = Database.getGuests().get(rand.nextInt(Database.getGuests().size()));
             Room room = Database.getRooms().get(rand.nextInt(Database.getRooms().size()));
-            
-            // Dates from 30 days ago to 30 days in the future
+
             LocalDate checkIn = LocalDate.now().plusDays(rand.nextInt(60) - 30);
-            LocalDate checkOut = checkIn.plusDays(1 + rand.nextInt(10)); // Stays of 1 to 10 nights
-            
-            // Hurghada resorts are mostly ALL_INCLUSIVE or HALF_BOARD
+            LocalDate checkOut = checkIn.plusDays(1 + rand.nextInt(10));
+
             DiningPackage[] dPackages = {DiningPackage.BREAKFAST_ONLY, DiningPackage.ALL_INCLUSIVE, DiningPackage.HALF_BOARD, DiningPackage.FULL_BOARD};
             DiningPackage dp = dPackages[rand.nextInt(dPackages.length)];
-            
+
             Reservation res = new Reservation(resId++, guest, room, checkIn, checkOut, dp, rand.nextInt(3), 1 + rand.nextInt(2));
-            
-            // Add fun amenities randomly
+
             if (rand.nextBoolean()) res.getSelectedAmenities().add(aquaPark);
             if (rand.nextDouble() > 0.7) res.getSelectedAmenities().add(scuba);
             if (rand.nextDouble() > 0.8) res.getSelectedAmenities().add(safari);
 
-            // Set logical status based on dates
             if (checkOut.isBefore(LocalDate.now())) {
                 res.setStatus(ReservationStatus.COMPLETED);
             } else if (!checkIn.isAfter(LocalDate.now()) && !checkOut.isBefore(LocalDate.now())) {
@@ -395,31 +387,71 @@ public class Database {
             } else {
                 res.setStatus(rand.nextBoolean() ? ReservationStatus.CONFIRMED : ReservationStatus.PENDING);
             }
-            
+
             Database.getReservations().add(res);
 
-            // Generate Invoices for CONFIRMED or COMPLETED reservations
             if (res.getStatus() == ReservationStatus.COMPLETED || res.getStatus() == ReservationStatus.CONFIRMED) {
                 Invoice inv = new Invoice();
                 inv.setInvoiceID(Database.getInvoices().size() + 1);
                 inv.setReservation(res);
                 inv.setPaymentMethod(rand.nextBoolean() ? PaymentMethod.CREDIT_CARD : PaymentMethod.ONLINE);
-                inv.setPaymentDate(checkIn.minusDays(rand.nextInt(5))); // Paid before arrival
+                inv.setPaymentDate(checkIn.minusDays(rand.nextInt(5)));
                 inv.setPaid(true);
-                
+
                 double rCost = engine.calculateRoomCost(room, checkIn, checkOut);
                 double dCost = engine.calculateDiningCost(dp, res.calcnights());
                 double aCost = engine.calculateAmenityCost(res.getSelectedAmenities());
-                
+
                 inv.setTotalAmount(rCost + dCost + aCost);
                 inv.setAppliedPromoCode(rand.nextBoolean() ? "HURGHADA2026" : "NONE");
                 inv.setDiscountAmount(inv.getAppliedPromoCode().equals("NONE") ? 0.0 : (inv.getTotalAmount() * 0.15));
-                
-                // Adjust total if promo applied
                 inv.setTotalAmount(inv.getTotalAmount() - inv.getDiscountAmount());
 
                 Database.getInvoices().add(inv);
             }
+        }
+
+        // 10. Guaranteed reservation for Adam
+        Guest adamGuest = Database.getGuests().stream()
+                .filter(g -> "adam".equals(g.getUserName()))
+                .findFirst().orElse(null);
+
+        if (adamGuest != null) {
+            // Room 510 -> Presidential Suite (floor 5, slot 10)
+            Room adamRoom = Database.getRooms().stream()
+                    .filter(rm -> rm.getRoomNumber() == 510)
+                    .findFirst()
+                    .orElse(Database.getRooms().get(0));
+
+            LocalDate adamCheckIn  = LocalDate.now().minusDays(2);
+            LocalDate adamCheckOut = LocalDate.now().plusDays(3);
+
+            Reservation adamRes = new Reservation(
+                    resId++, adamGuest, adamRoom,
+                    adamCheckIn, adamCheckOut,
+                    DiningPackage.ALL_INCLUSIVE, 0, 2
+            );
+            adamRes.getSelectedAmenities().add(spa);
+            adamRes.getSelectedAmenities().add(aquaPark);
+            adamRes.setStatus(ReservationStatus.CONFIRMED);
+            Database.getReservations().add(adamRes);
+
+            Invoice adamInv = new Invoice();
+            adamInv.setInvoiceID(Database.getInvoices().size() + 1);
+            adamInv.setReservation(adamRes);
+            adamInv.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+            adamInv.setPaymentDate(adamCheckIn);
+            adamInv.setPaid(true);
+
+            double rCost = engine.calculateRoomCost(adamRoom, adamCheckIn, adamCheckOut);
+            double dCost = engine.calculateDiningCost(DiningPackage.ALL_INCLUSIVE, adamRes.calcnights());
+            double aCost = engine.calculateAmenityCost(adamRes.getSelectedAmenities());
+            adamInv.setTotalAmount(rCost + dCost + aCost);
+            adamInv.setAppliedPromoCode("NONE");
+            adamInv.setDiscountAmount(0.0);
+            Database.getInvoices().add(adamInv);
+
+            System.out.println("[SEEDER] Test reservation created for 'adam' -> Room 510, " + adamCheckIn + " to " + adamCheckOut);
         }
 
         Database.saveData();
