@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="1060.0" spacing="24.0" styleClass="top-bar" stylesheets="@../styles/theme.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotel.GUI.controllers.TopBarController">
+<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="1060.0" spacing="24.0" styleClass="top-bar" stylesheets="@../styles/theme.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotel.GUI.controllers.TopBarController">
    <padding>
       <Insets left="32.0" right="32.0" />
    </padding>
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="64.0" prefWidth="321.0" spacing="15.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="64.0" prefWidth="321.0" spacing="15.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="lblPageTitle" prefHeight="25.0" prefWidth="210.0" style="-fx-font-weight: bold; -fx-text-fill: #00291c;" text="The Digital Concierge">
                <font>
@@ -28,8 +28,8 @@
             </Label>
          </children>
       </HBox>
-      <Region prefHeight="64.0" prefWidth="52.0" />
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: #eae8e0; -fx-background-radius: 4px;">
+      <Region prefHeight="64.0" prefWidth="52.0" HBox.hgrow="ALWAYS" />
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: #eae8e0; -fx-background-radius: 4px;" HBox.hgrow="ALWAYS">
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
          </padding>
@@ -42,7 +42,7 @@
             <TextField fx:id="txtSearch" promptText="Search guests, rooms...." style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="64.0" prefWidth="155.0" spacing="16.0">
+      <HBox alignment="CENTER" prefHeight="64.0" prefWidth="155.0" spacing="16.0" HBox.hgrow="ALWAYS">
          <children>
             <ImageView fx:id="imgBell" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: transparent;">
                <image>
@@ -61,7 +61,7 @@
             </ImageView>
          </children>
       </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="64.0" prefWidth="154.0" spacing="12.0">
+      <HBox alignment="CENTER_RIGHT" prefHeight="64.0" prefWidth="154.0" spacing="12.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="lblUsername" text="Username" textFill="#43474e">
                <font>

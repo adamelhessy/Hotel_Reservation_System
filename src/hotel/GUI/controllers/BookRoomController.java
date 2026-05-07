@@ -1,5 +1,6 @@
 package hotel.GUI.controllers;
-
+import hotel.GUI.utils.SessionManager;
+import hotel.model.users.User;
 import hotel.model.entities.Room;
 import hotel.core.BookingEngine;
 import hotel.core.Database;
@@ -24,20 +25,41 @@ public class BookRoomController {
     @FXML private Label adultCountLabel;
     @FXML private VBox resultsVBox;
 
-    private BookingEngine engine = new BookingEngine();
+    @FXML private SideBarController sideBarController;
+    @FXML private TopBarController topBarController;
+
     private int adults = 1;
 
-    @FXML
+   @FXML
     public void initialize() {
+        // Initialize Sidebar and Topbar
+        if (sideBarController != null) {
+            User activeUser = SessionManager.getLoggedInUser();
+            if (activeUser != null) {
+                sideBarController.setRole(activeUser.getTypeofuser().name());
+            } else {
+                sideBarController.setRole("GUEST");
+            }
+            sideBarController.setActiveSection("new-booking"); 
+        }
+
+        if (topBarController != null) {
+            topBarController.setPageTitle("Reservations", "New Booking");
+            topBarController.refresh();
+        }
+
+        // Initialize Existing Filters
         Database.getRoomTypes().forEach(type -> roomTypeCombo.getItems().add(type.getTypeName()));
         viewCombo.getItems().addAll("SEA_VIEW", "GARDEN_VIEW", "CITY_VIEW", "POOL");
         checkInPicker.setValue(LocalDate.now());
         checkOutPicker.setValue(LocalDate.now().plusDays(1));
         adultCountLabel.setText(String.valueOf(adults));
+        
         priceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             priceValueLabel.setText("$" + String.format("%.0f", newVal.doubleValue()));
         });
         priceValueLabel.setText("$" + String.format("%.0f", priceSlider.getValue()));
+        
         onSearchRooms();
     }
 
@@ -47,7 +69,7 @@ public class BookRoomController {
 
         LocalDate checkIn = checkInPicker.getValue();
         LocalDate checkOut = checkOutPicker.getValue();
-        List<Room> availableRooms = engine.getAvailableRooms(checkIn, checkOut);
+        List<Room> availableRooms = BookingEngine.getAvailableRooms(checkIn, checkOut);
 
         int matchCount = 0;
 

@@ -3,30 +3,29 @@
   -fx-font-family: "Inter", "Segoe UI", sans-serif;
 }
 
-
 .card .label {
-    -fx-text-fill: #1c1c17;
-    -fx-opacity: 1.0;
+  -fx-text-fill: #1c1c17;
+  -fx-opacity: 1;
 }
 
 .card .display-sm {
-    -fx-text-fill: #00291c;
-    -fx-font-size: 18px;
+  -fx-text-fill: #00291c;
+  -fx-font-size: 18px;
 }
 
 .amenity-chip {
-    -fx-background-color: #eae8e0;
-    -fx-text-fill: #00412e;
-    -fx-padding: 4 10;
-    -fx-background-radius: 20;
-    -fx-font-size: 12px;
+  -fx-background-color: #eae8e0;
+  -fx-text-fill: #00412e;
+  -fx-padding: 4 10;
+  -fx-background-radius: 20;
+  -fx-font-size: 12px;
 }
 
 #descriptionLabel {
-    -fx-text-fill: #555555;
-    -fx-font-size: 13px;
-    -fx-wrap-text: true;
-    -fx-max-width: 350px;
+  -fx-text-fill: #555555;
+  -fx-font-size: 13px;
+  -fx-wrap-text: true;
+  -fx-max-width: 350px;
 }
 /* Base Canvas & No-Line Rule styling */
 .root {
@@ -70,23 +69,44 @@
 }
 
 /* Role Selector Tabs */
-.role-tab {
-  -fx-background-color: transparent;
-  -fx-text-fill: #43474e;
-  -fx-background-radius: 8px;
+.button.role-tab {
+  -fx-background-color: transparent; /* Forces it to ignore the global dark green */
+  -fx-text-fill: #43474e; /* Gray text */
+  -fx-background-radius: 6px;
   -fx-cursor: hand;
+  -fx-font-weight: normal;
+  -fx-padding: 8 16;
 }
-.role-tab-active {
+
+.button.role-tab-active {
   -fx-background-color: #ffffff;
-  -fx-text-fill: #00291c;
+  -fx-text-fill: #000000;
   -fx-font-weight: bold;
-  -fx-effect: dropshadow(gaussian, rgba(28, 28, 23, 0.06), 12, 0, 0, 2);
+  -fx-background-radius: 6px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.button.role-tab:hover {
+  -fx-background-color: rgba(0, 0, 0, 0.04); /* Very subtle gray on hover */
+  -fx-text-fill: #1c1c17;
+}
+
+/* 4. Prevent the hover effect from ruining the active tab's white background */
+.button.role-tab-active:hover {
+  -fx-background-color: #ffffff;
 }
 
 .display-sm {
   -fx-font-size: 20px;
   -fx-font-weight: 700;
   -fx-text-fill: #00291c;
+}
+
+.register-left-panel {
+  -fx-background-color: #00291c;
+  -fx-background-image: url("../assets/rooms/default.jpg.png");
+  -fx-background-size: cover;
+  -fx-background-position: center center;
 }
 
 .login-left-panel {
@@ -141,50 +161,50 @@
 
 /* Style for the main background */
 .root {
-    -fx-background-color: #FDF9F0;
+  -fx-background-color: #fdf9f0;
 }
 
 /* Make your buttons look professional */
 .button {
-    -fx-background-color: #003321;
-    -fx-text-fill: white;
-    -fx-background-radius: 5;
-    -fx-cursor: hand;
+  -fx-background-color: #003321;
+  -fx-text-fill: white;
+  -fx-background-radius: 5;
+  -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #2D5A27;
+  -fx-background-color: #2d5a27;
 }
 
 /* Style for your Labels/Headers */
 .label-header {
-    -fx-font-family: "System";
-    -fx-font-weight: bold;
-    -fx-text-fill: #2D5A27;
+  -fx-font-family: "System";
+  -fx-font-weight: bold;
+  -fx-text-fill: #2d5a27;
 }
 
 /* Make the Reservation Cards look elevated */
-    .reservation-card {
-    -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-    /* The default state of your button */
-    .button {
-        -fx-background-color: #003321;
-        -fx-text-fill: white;
-        -fx-transition-duration: 0.2s; /* Note: JavaFX CSS is limited, but we can simulate this */
-    }
+.reservation-card {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+  /* The default state of your button */
+  .button {
+    -fx-background-color: #003321;
+    -fx-text-fill: white;
+    -fx-transition-duration: 0.2s; /* Note: JavaFX CSS is limited, but we can simulate this */
+  }
 
-    /* Hover effect: Lighten the color when the mouse is over it */
-    .button:hover {
-        -fx-background-color: #2D5A27;
-        -fx-cursor: hand;
-    }
+  /* Hover effect: Lighten the color when the mouse is over it */
+  .button:hover {
+    -fx-background-color: #2d5a27;
+    -fx-cursor: hand;
+  }
 
-    /* Click effect: The animation when the button is actively clicked */
-    .button:pressed {
-        -fx-scale-x: 0.95; /* Shrink horizontally */
-        -fx-scale-y: 0.95; /* Shrink vertically */
-        -fx-background-color: #1a3a18; /* Darken the color further */
-    }
+  /* Click effect: The animation when the button is actively clicked */
+  .button:pressed {
+    -fx-scale-x: 0.95; /* Shrink horizontally */
+    -fx-scale-y: 0.95; /* Shrink vertically */
+    -fx-background-color: #1a3a18; /* Darken the color further */
+  }
 }

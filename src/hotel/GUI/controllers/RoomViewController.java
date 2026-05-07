@@ -3,7 +3,6 @@ package hotel.GUI.controllers;
 import hotel.model.entities.Room;
 import javafx.scene.image.Image;
 import java.io.InputStream;
-import hotel.model.entities.Amenity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
