@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<!--
+    Grand Azure Hotel - Booking Checkout (3-step flow)
+    Controller: Checkout
+    Steps:  [0] Review Invoice  ->  [1] Payment  ->  [2] Confirmation
+-->
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controllers.Checkout"
+           prefWidth="1220" prefHeight="980"
+           style="-fx-background-color: #f5f2eb;">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCREEN 1 – REVIEW INVOICE
+         ═══════════════════════════════════════════════════════════════ -->
+    <VBox fx:id="screenReview" visible="true" managed="true"
+          style="-fx-padding: 40 60 40 60;" spacing="24">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <VBox spacing="4">
+                <Label text="SCREEN 7 — BOOKING CHECKOUT"
+                       style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                <Label text="Review Your Booking"
+                       style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1a3228; -fx-font-family: 'Georgia';"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnCancelReview" text="X  CANCEL" onAction="#onCancel"
+                    style="-fx-background-color: transparent; -fx-text-fill: #2e8b57;
+                           -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-border-color: transparent;"/>
+        </HBox>
+
+        <!-- Step Indicator -->
+        <HBox alignment="CENTER" prefHeight="70">
+
+            <!-- Step 1 – Active -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                <StackPane prefWidth="44" prefHeight="44">
+                    <Circle radius="22" style="-fx-fill: #2e8b57;"/>
+                    <Label text="1"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </StackPane>
+                <Label text="REVIEW INVOICE"
+                       style="-fx-font-size: 10px; -fx-text-fill: #2e8b57; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                    style="-fx-background-color: #cccccc;"/>
+
+            <!-- Step 2 – Inactive -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                <StackPane prefWidth="44" prefHeight="44">
+                    <Circle radius="22" style="-fx-fill: #e8e4dc;"/>
+                    <Label text="2"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #888888;"/>
+                </StackPane>
+                <Label text="PAYMENT"
+                       style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                    style="-fx-background-color: #cccccc;"/>
+
+            <!-- Step 3 – Inactive -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                <StackPane prefWidth="44" prefHeight="44">
+                    <Circle radius="22" style="-fx-fill: #e8e4dc;"/>
+                    <Label text="3"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #888888;"/>
+                </StackPane>
+                <Label text="CONFIRMATION"
+                       style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Main Content Row -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS" alignment="TOP_LEFT">
+
+            <!-- Left Card -->
+            <VBox HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 12;
+                         -fx-padding: 28 32 28 32;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                  spacing="20">
+
+                <!-- Guest Details -->
+                <VBox spacing="12">
+                    <Label text="GUEST DETAILS"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <StackPane prefWidth="44" prefHeight="44">
+                            <Circle radius="22" style="-fx-fill: #d5e8dc;"/>
+                            <Label text="AS"
+                                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                        </StackPane>
+                        <VBox spacing="2">
+                            <Label fx:id="lblGuestName" text="Alice Smith"
+                                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                            <Label fx:id="lblGuestEmail" text="alice.smith@example.com"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Room Details -->
+                <VBox spacing="10">
+                    <Label text="ROOM DETAILS"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="🛏" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="2">
+                            <Label fx:id="lblRoomName" text="Deluxe Suite - Room 204"
+                                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                            <Label fx:id="lblRoomMeta" text="5 Nights • 2 Adults"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Cost Breakdown -->
+                <VBox spacing="14">
+                    <Label text="COST BREAKDOWN"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <HBox>
+                        <Label fx:id="lblRoomRateDesc" text="Room Rate (5 nights @ $750/night)"
+                               style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblRoomRateAmt" text="$3,750.00"
+                               style="-fx-font-size: 14px; -fx-text-fill: #1a3228;"/>
+                    </HBox>
+                    <HBox>
+                        <Label fx:id="lblTaxDesc" text="State &amp; Local Taxes (12%)"
+                               style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTaxAmt" text="$450.00"
+                               style="-fx-font-size: 14px; -fx-text-fill: #1a3228;"/>
+                    </HBox>
+                    <HBox>
+                        <Label fx:id="lblResortFeeDesc" text="Resort Fee ($60/night)"
+                               style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblResortFeeAmt" text="$300.00"
+                               style="-fx-font-size: 14px; -fx-text-fill: #1a3228;"/>
+                    </HBox>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Total -->
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Total Amount Due"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblTotalDue" text="$4,500.00"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Right Card: Booking Summary -->
+            <VBox prefWidth="280"
+                  style="-fx-background-color: white; -fx-background-radius: 12;
+                         -fx-padding: 24 24 24 24;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                  spacing="16">
+                <Label text="Booking Summary"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                <VBox spacing="4">
+                    <Label text="CHECK-IN"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblCheckInDate" text="Oct 12, 2023"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <Label fx:id="lblCheckInTime" text="3:00 PM"
+                           style="-fx-font-size: 13px; -fx-text-fill: #666666;"/>
+                </VBox>
+                <Separator/>
+                <VBox spacing="4">
+                    <Label text="CHECK-OUT"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblCheckOutDate" text="Oct 17, 2023"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <Label fx:id="lblCheckOutTime" text="11:00 AM"
+                           style="-fx-font-size: 13px; -fx-text-fill: #666666;"/>
+                </VBox>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnContinueToPayment" text="CONTINUE TO PAYMENT  →"
+                        prefWidth="232" prefHeight="48"
+                        onAction="#onContinueToPayment"
+                        style="-fx-background-color: #2e8b57; -fx-text-fill: white;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCREEN 2 – PAYMENT
+         ═══════════════════════════════════════════════════════════════ -->
+    <VBox fx:id="screenPayment" visible="false" managed="false"
+          alignment="TOP_CENTER"
+          style="-fx-padding: 36 0 36 0;" spacing="20">
+
+        <!-- Hotel Branding -->
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="GRAND AZURE HOTEL"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1a3228; -fx-letter-spacing: 2;"/>
+            <Label text="Checkout"
+                   style="-fx-font-size: 13px; -fx-text-fill: #888888;"/>
+        </VBox>
+
+        <!-- White Card -->
+        <VBox prefWidth="700" maxWidth="700" spacing="24"
+              style="-fx-background-color: white; -fx-background-radius: 14;
+                     -fx-padding: 32 36 32 36;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);">
+
+            <!-- Step Bar -->
+            <HBox alignment="CENTER">
+
+                <!-- Step 1 – Done -->
+                <VBox alignment="CENTER" spacing="6" prefWidth="100">
+                    <StackPane prefWidth="40" prefHeight="40">
+                        <Circle radius="20" style="-fx-fill: #1a3228;"/>
+                        <Label text="✓"
+                               style="-fx-font-size: 14px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Label text="REVIEW"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                        style="-fx-background-color: #cccccc;"/>
+
+                <!-- Step 2 – Active -->
+                <VBox alignment="CENTER" spacing="6" prefWidth="100">
+                    <StackPane prefWidth="40" prefHeight="40">
+                        <Circle radius="20"
+                                style="-fx-fill: #e8f5ee; -fx-stroke: #2e8b57; -fx-stroke-width: 2;"/>
+                        <Label text="2"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e8b57;"/>
+                    </StackPane>
+                    <Label text="PAYMENT"
+                           style="-fx-font-size: 10px; -fx-text-fill: #2e8b57; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                        style="-fx-background-color: #cccccc;"/>
+
+                <!-- Step 3 – Inactive -->
+                <VBox alignment="CENTER" spacing="6" prefWidth="100">
+                    <StackPane prefWidth="40" prefHeight="40">
+                        <Circle radius="20" style="-fx-fill: #e8e4dc;"/>
+                        <Label text="3"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #888888;"/>
+                    </StackPane>
+                    <Label text="CONFIRM"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+                </VBox>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Title -->
+            <VBox spacing="6">
+                <Label text="Select Payment Method"
+                       style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                <Label fx:id="lblPaymentSubtitle"
+                       text="Choose how you would like to settle your balance of $1,450.00."
+                       style="-fx-font-size: 13px; -fx-text-fill: #666666;"/>
+            </VBox>
+
+            <!-- Option 1: Account Balance -->
+            <HBox fx:id="panelBalance" alignment="CENTER_LEFT" spacing="14" prefHeight="72"
+                  style="-fx-background-color: #f7f5f0; -fx-background-radius: 10;
+                         -fx-padding: 16 20 16 20;">
+                <Label text="💳" style="-fx-font-size: 20px;"/>
+                <VBox HBox.hgrow="ALWAYS" spacing="3">
+                    <Label text="Account Balance"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <HBox spacing="4">
+                        <Label text="Available balance:"
+                               style="-fx-font-size: 13px; -fx-text-fill: #666666;"/>
+                        <Label fx:id="lblAvailableBalance" text="$3,200.00"
+                               style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    </HBox>
+                </VBox>
+                <Button fx:id="btnPayFromBalance" text="Pay from Balance"
+                        onAction="#onPayFromBalance"
+                        style="-fx-background-color: #e8e4dc; -fx-text-fill: #1a3228;
+                               -fx-font-size: 12px; -fx-background-radius: 6;
+                               -fx-cursor: hand; -fx-padding: 8 16 8 16;"/>
+            </HBox>
+
+            <!-- Option 2: Pay Now Credit Card – selected by default -->
+            <VBox fx:id="panelCreditCard" spacing="14"
+                  style="-fx-background-color: #f7f5f0; -fx-background-radius: 10;
+                         -fx-padding: 16 20 16 20;
+                         -fx-border-color: #2e8b57; -fx-border-width: 2; -fx-border-radius: 10;">
+                <StackPane>
+                    <HBox alignment="CENTER_LEFT" spacing="10" StackPane.alignment="CENTER_LEFT">
+                        <RadioButton fx:id="rbCreditCard" selected="true"
+                                     onAction="#onSelectCreditCard"/>
+                        <VBox spacing="2">
+                            <Label text="Pay Now (Credit Card)"
+                                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                            <Label text="Process payment securely via our payment gateway."
+                                   style="-fx-font-size: 12px; -fx-text-fill: #666666;"/>
+                        </VBox>
+                    </HBox>
+                    <Label text="SELECTED"
+                           style="-fx-background-color: #2e8b57; -fx-text-fill: white;
+                                  -fx-font-size: 9px; -fx-font-weight: bold; -fx-letter-spacing: 1;
+                                  -fx-background-radius: 20; -fx-padding: 4 10 4 10;"
+                           StackPane.alignment="TOP_RIGHT"/>
+                </StackPane>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <VBox HBox.hgrow="ALWAYS" spacing="4">
+                        <Label text="AMOUNT TO PAY"
+                               style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                        <HBox alignment="CENTER_LEFT"
+                              style="-fx-background-color: #eeeae3; -fx-background-radius: 6;
+                                     -fx-padding: 10 14 10 14;">
+                            <Label text="$ "
+                                   style="-fx-font-size: 14px; -fx-text-fill: #888888;"/>
+                            <Label fx:id="lblAmountToPay" text="1,450.00"
+                                   style="-fx-font-size: 14px; -fx-text-fill: #1a3228; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+                    <Button fx:id="btnPayWithCard" text="Pay with Card"
+                            onAction="#onPayWithCard"
+                            style="-fx-background-color: #1a3228; -fx-text-fill: white;
+                                   -fx-font-size: 13px; -fx-font-weight: bold;
+                                   -fx-background-radius: 8; -fx-cursor: hand;
+                                   -fx-padding: 12 22 12 22;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Option 3: Pay at Hotel -->
+            <HBox fx:id="panelPayAtHotel" alignment="CENTER_LEFT" spacing="14" prefHeight="64"
+                  style="-fx-background-color: #f7f5f0; -fx-background-radius: 10;
+                         -fx-padding: 16 20 16 20;">
+                <RadioButton fx:id="rbPayAtHotel" selected="false"
+                             onAction="#onSelectPayAtHotel"/>
+                <VBox spacing="2">
+                    <Label text="Pay at Hotel"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <Label text="Pay cash or card upon arrival at check-in."
+                           style="-fx-font-size: 12px; -fx-text-fill: #666666;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Bottom Nav -->
+            <HBox alignment="CENTER_LEFT">
+                <Button fx:id="btnBackToReview" text="← Back" onAction="#onBackToReview"
+                        style="-fx-background-color: transparent; -fx-text-fill: #555555;
+                               -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: transparent;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnContinueToConfirm" text="Continue to Confirmation  →"
+                        onAction="#onContinueToConfirmation"
+                        style="-fx-background-color: #2e8b57; -fx-text-fill: white;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-cursor: hand;
+                               -fx-padding: 12 24 12 24;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCREEN 3 – CONFIRMATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <VBox fx:id="screenConfirmation" visible="false" managed="false"
+          alignment="TOP_CENTER"
+          style="-fx-padding: 60 0 60 0;">
+
+        <!-- White Card -->
+        <VBox prefWidth="760" maxWidth="760" alignment="CENTER"
+              style="-fx-background-color: white; -fx-background-radius: 14;
+                     -fx-padding: 36 40 36 40;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);"
+              spacing="28">
+
+            <!-- Step Bar: all complete -->
+            <HBox alignment="CENTER">
+                <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                    <StackPane prefWidth="40" prefHeight="40">
+                        <Circle radius="20" style="-fx-fill: #1a3228;"/>
+                        <Label text="✓"
+                               style="-fx-font-size: 13px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Label text="REVIEW INVOICE"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                        style="-fx-background-color: #1a3228;"/>
+
+                <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                    <StackPane prefWidth="40" prefHeight="40">
+                        <Circle radius="20" style="-fx-fill: #1a3228;"/>
+                        <Label text="✓"
+                               style="-fx-font-size: 13px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Label text="PAYMENT"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS" prefHeight="2" maxHeight="2"
+                        style="-fx-background-color: #1a3228;"/>
+
+                <VBox alignment="CENTER" spacing="6" prefWidth="120">
+                    <StackPane prefWidth="44" prefHeight="44">
+                        <Circle radius="22" style="-fx-fill: #2e8b57;"/>
+                        <Label text="3"
+                               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    </StackPane>
+                    <Label text="CONFIRMATION"
+                           style="-fx-font-size: 10px; -fx-text-fill: #1a3228; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Big Green Check -->
+            <StackPane prefWidth="92" prefHeight="92" maxWidth="92" maxHeight="92"
+                       VBox.vgrow="NEVER">
+                <Circle radius="46" style="-fx-fill: #c8ebd8;"/>
+                <Label text="✓"
+                       style="-fx-font-size: 32px; -fx-text-fill: #2e8b57; -fx-font-weight: bold;"/>
+            </StackPane>
+
+            <!-- Confirmed Text -->
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Booking Confirmed!"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1a3228; -fx-font-family: 'Georgia';"/>
+                <HBox alignment="CENTER">
+                    <Label text="Thank you for choosing Grand Azure Hotel. Your reservation "
+                           style="-fx-font-size: 14px; -fx-text-fill: #555555;"/>
+                    <Label fx:id="lblReservationId" text="#RES-8930"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                    <Label text=" is now confirmed."
+                           style="-fx-font-size: 14px; -fx-text-fill: #555555;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Confirmation Summary Row -->
+            <HBox style="-fx-background-color: #f7f5f0; -fx-background-radius: 10;
+                         -fx-padding: 20 24 20 24;">
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="GUEST NAME"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblConfirmGuestName" text="Alice Smith"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="ROOM"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblConfirmRoom" text="Deluxe Suite 204"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="CHECK-IN"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblConfirmCheckIn" text="Apr 22, 2026"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="TOTAL PAID"
+                           style="-fx-font-size: 10px; -fx-text-fill: #888888; -fx-letter-spacing: 1;"/>
+                    <Label fx:id="lblConfirmTotal" text="$4,500.00"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a3228;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Action Buttons -->
+            <HBox alignment="CENTER" spacing="16">
+                <Button fx:id="btnDownloadReceipt" text="⬇  Download Receipt"
+                        onAction="#onDownloadReceipt"
+                        style="-fx-background-color: white; -fx-text-fill: #2e8b57;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-cursor: hand;
+                               -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-border-width: 1;
+                               -fx-padding: 12 28 12 28;"/>
+                <Button fx:id="btnGoToDashboard" text="Go to Dashboard"
+                        onAction="#onGoToDashboard"
+                        style="-fx-background-color: #1a3228; -fx-text-fill: white;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-cursor: hand;
+                               -fx-padding: 12 28 12 28;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
+</StackPane>
