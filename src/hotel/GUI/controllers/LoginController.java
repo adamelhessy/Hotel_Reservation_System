@@ -108,7 +108,7 @@ public class LoginController {
                 loggedInUser = tempRec.Login(username, password, UserType.RECEPTIONIST);
                 if (loggedInUser != null) {
                     SessionManager.setLoggedInUser(loggedInUser);
-                    SceneManager.navigate("ReceptionistDashboard.fxml");
+                    SceneManager.navigate("Receptionist_Dashboard.fxml");
                 }
             }
             case "Admin" -> {
